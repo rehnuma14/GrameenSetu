@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grameen Setu – Bidding</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .top-nav .brand {
+      font-size: 19px;
+      font-weight: 800;
+    }
+    .main h2 {
+      text-align: center;
+      font-weight: 800;
+      color: #14532d;
+    }
+    .page-title-wrapper {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+    }
+    .bid-card {
+      background: white;
+      border-radius: 18px;
+      padding: 1rem;
+      border: 1px solid #dcfce7;
+      transition: 0.25s ease;
+    }
+    .bid-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 25px rgba(0, 80, 0, 0.15);
+    }
+    .bid-btn:hover {
+      transform: scale(1.05);
+      background: #14532d;
+    }
+  </style>
+</head>
+<body class="page-transition">
+
+<header class="top-nav">
+  <div class="brand text-center" style="margin:0 auto;">
+    <div style="font-size:30px;">🌾 Grameen Setu</div>
+    <div style="color:#d1fae5; font-size:13px;">Farm to Business</div>
+  </div>
+</header>
+
+<div class="navigation">
+  <ul>
+    <li><a href="#"><span class="icon"></span><span class="title"><u>Grameen Setu</u></span></a></li>
+    <li><a href="index.html"><span class="icon"><ion-icon name="home-outline"></ion-icon></span><span class="title">Dashboard</span></a></li>
+    <li><a href="trending.html"><span class="icon"><ion-icon name="trending-up-outline"></ion-icon></span><span class="title">Trending</span></a></li>
+    <li><a href="messages.html"><span class="icon"><ion-icon name="chatbubble-outline"></ion-icon></span><span class="title">Messages</span></a></li>
+    <li class="hovered"><a href="bidding.html"><span class="icon"><ion-icon name="hammer-outline"></ion-icon></span><span class="title">Bidding</span></a></li>
+    <li><a href="history.html"><span class="icon"><ion-icon name="time-outline"></ion-icon></span><span class="title">History</span></a></li>
+    <li><a href="rating.html"><span class="icon"><ion-icon name="star-outline"></ion-icon></span><span class="title">Ratings</span></a></li>
+    <li><a href="settings.html"><span class="icon"><ion-icon name="settings-outline"></ion-icon></span><span class="title">Settings</span></a></li>
+    <li><a href="#" class="logout"><span class="icon"><ion-icon name="log-out-outline"></ion-icon></span><span class="title">Sign Out</span></a></li>
+  </ul>
+</div>
+
+<div class="main">
+  <div class="topbar">
+    <div class="toggle"><ion-icon name="menu-outline"></ion-icon></div>
+    <div class="search">
+      <label>
+        <input type="text" placeholder="Search auctions...">
+        <ion-icon name="search-outline"></ion-icon>
+      </label>
+    </div>
+  </div>
+
+  <div class="px-5 py-6">
+    <div class="page-title-wrapper">
+      <h2>⚡ Live Bidding</h2>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+      <!-- Wheat -->
+      <div class="bid-card">
+        <img src="assets/imgs/wheat-auction.jpg" class="h-36 w-full object-cover rounded-xl mb-3" alt="Wheat">
+        <h3 class="font-bold text-lg text-green-900">🌾 Wheat (10 quintal)</h3>
+        <p class="text-gray-600">Current bid</p>
+        <p class="text-green-700 font-bold text-xl">₹2,300</p>
+        <p class="text-sm text-gray-500 mt-1">⏳ Ends in 4 hours</p>
+        <button class="bid-btn mt-3 bg-green-600 text-white px-4 py-2 rounded-full text-sm font-semibold w-full">Place Bid</button>
+      </div>
+      <!-- Tomato -->
+      <div class="bid-card">
+        <img src="assets/imgs/tomato-auction.jpg" class="h-36 w-full object-cover rounded-xl mb-3" alt="Tomato">
+        <h3 class="font-bold text-lg text-green-900">🍅 Tomato (5 quintal)</h3>
+        <p class="text-gray-600">Current bid</p>
+        <p class="text-green-700 font-bold text-xl">₹1,550</p>
+        <p class="text-sm text-gray-500 mt-1">⏳ Ends in 1 hour</p>
+        <button class="bid-btn mt-3 bg-green-600 text-white px-4 py-2 rounded-full text-sm font-semibold w-full">Place Bid</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="assets/js/main.js"></script>
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</body>
+</html>

@@ -1,0 +1,273 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grameen Setu – Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <style>
+    .top-nav .brand {
+      font-size: 19px !important;
+      font-weight: 800 !important;
+    }
+    .main h2.section-title {
+      text-align: center;
+      font-weight: 800;
+      color: #14532d;
+      background: linear-gradient(145deg, #f0fdf4 0%, #dcfce7 100%);
+      padding: 0.8rem 2rem;
+      border-radius: 60px;
+      display: inline-block;
+      margin: auto;
+      width: fit-content;
+      box-shadow: 0 6px 12px -6px rgba(0, 40, 0, 0.08);
+      border: 1px solid #bbf7d0;
+      font-size: 1.8rem;
+    }
+    .page-title-wrapper {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 1.8rem;
+    }
+    .main {
+      background: #fafdfa;
+    }
+    .navigation ul li.hovered {
+      background: #e6f7e6;
+      border-left: 6px solid #166534;
+    }
+    .dashboard-card {
+      background: white;
+      border-radius: 20px;
+      padding: 1.5rem;
+      border: 1px solid #dcfce7;
+      box-shadow: 0 6px 16px rgba(0, 80, 0, 0.08);
+      transition: 0.25s ease;
+    }
+    .dashboard-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 28px rgba(0, 80, 0, 0.15);
+    }
+  </style>
+</head>
+<body class="page-transition">
+
+<header class="top-nav">
+  <div class="brand text-center" style="margin:0 auto;">
+    <div style="font-size:30px;">🌾 Grameen Setu</div>
+    <div style="color:#d1fae5; font-size:13px;">Farm to Business</div>
+  </div>
+</header>
+
+<div class="container">
+  <div class="navigation">
+    <ul>
+      <li><a href="#"><span class="icon"></span><span class="title"><u>Grameen Setu</u></span></a></li>
+      <li class="hovered"><a href="index.html"><span class="icon"><ion-icon name="home-outline"></ion-icon></span><span class="title">Dashboard</span></a></li>
+      <li><a href="trending.html"><span class="icon"><ion-icon name="trending-up-outline"></ion-icon></span><span class="title">Trending</span></a></li>
+      <li><a href="messages.html"><span class="icon"><ion-icon name="chatbubble-outline"></ion-icon></span><span class="title">Messages</span></a></li>
+      <li><a href="bidding.html"><span class="icon"><ion-icon name="hammer-outline"></ion-icon></span><span class="title">Bidding</span></a></li>
+      <li><a href="history.html"><span class="icon"><ion-icon name="time-outline"></ion-icon></span><span class="title">History</span></a></li>
+      <li><a href="rating.html"><span class="icon"><ion-icon name="star-outline"></ion-icon></span><span class="title">Ratings</span></a></li>
+      <li><a href="settings.html"><span class="icon"><ion-icon name="settings-outline"></ion-icon></span><span class="title">Settings</span></a></li>
+      <li><a href="#" class="logout"><span class="icon"><ion-icon name="log-out-outline"></ion-icon></span><span class="title">Sign Out</span></a></li>
+    </ul>
+  </div>
+
+  <div class="main">
+    <div class="topbar">
+      <div class="toggle"><ion-icon name="menu-outline"></ion-icon></div>
+      <div class="search">
+        <label>
+          <input type="text" placeholder="Search produce...">
+          <ion-icon name="search-outline"></ion-icon>
+        </label>
+      </div>
+    </div>
+
+    <div class="px-5 pt-6">
+      <div class="page-title-wrapper">
+        <h2 class="section-title">📊 Dashboard Overview</h2>
+      </div>
+    </div>
+
+    <!-- Role Toggle -->
+    <div class="px-5 flex justify-end items-center mb-4">
+      <span class="text-sm text-gray-500 mr-3"><span id="activeRoleLabel">Farmer</span> view</span>
+      <div class="bg-gray-100 rounded-lg p-1 flex">
+        <button id="farmerToggle" class="px-4 py-1.5 text-sm font-medium rounded-md bg-green-600 text-white">Farmer</button>
+        <button id="buyerToggle" class="px-4 py-1.5 text-sm font-medium text-gray-600">Buyer</button>
+      </div>
+    </div>
+
+    <!-- Farmer Dashboard -->
+    <div id="farmerDashboard" class="px-5 pb-6 space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="dashboard-card">
+          <h3 class="font-semibold mb-3 text-green-900">🌾 Best selling price</h3>
+          <p>Wheat: <span class="text-green-700 font-bold">₹2,280 ▲12%</span></p>
+          <p>Tomato: <span class="text-green-700 font-bold">₹1,520 ▲5%</span></p>
+        </div>
+        <div class="dashboard-card">
+          <h3 class="font-semibold mb-3 text-green-900">🤝 Top Buyers</h3>
+          <p>ABC Traders – ₹2,300</p>
+          <p>XYZ Foods – ₹1,550</p>
+        </div>
+      </div>
+      <div class="dashboard-card">
+        <h3 class="font-semibold mb-3">📊 Profit Comparison</h3>
+        <p class="text-green-700 font-bold text-xl">+42.5% more via platform</p>
+      </div>
+      <div class="dashboard-card">
+        <h3 class="font-semibold mb-3">⏱️ Delivery Speed</h3>
+        <p>Save up to <span class="text-green-600 font-bold">3 days</span></p>
+      </div>
+    </div>
+
+    <!-- Buyer Dashboard (Enhanced) -->
+    <div id="buyerDashboard" class="px-5 pb-6 space-y-6 hidden">
+      <!-- Row 1: Stats -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div class="dashboard-card">
+          <div class="flex items-center gap-3">
+            <div class="bg-green-100 p-3 rounded-full"><ion-icon name="cash-outline" class="text-2xl text-green-700"></ion-icon></div>
+            <div>
+              <p class="text-sm text-gray-500">Active Bids</p>
+              <p class="text-2xl font-bold text-green-900">4</p>
+            </div>
+          </div>
+        </div>
+        <div class="dashboard-card">
+          <div class="flex items-center gap-3">
+            <div class="bg-amber-100 p-3 rounded-full"><ion-icon name="time-outline" class="text-2xl text-amber-700"></ion-icon></div>
+            <div>
+              <p class="text-sm text-gray-500">Pending Orders</p>
+              <p class="text-2xl font-bold text-amber-700">2</p>
+            </div>
+          </div>
+        </div>
+        <div class="dashboard-card">
+          <div class="flex items-center gap-3">
+            <div class="bg-blue-100 p-3 rounded-full"><ion-icon name="star-outline" class="text-2xl text-blue-700"></ion-icon></div>
+            <div>
+              <p class="text-sm text-gray-500">Saved Farmers</p>
+              <p class="text-2xl font-bold text-blue-700">7</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Row 2: Recent Bids & Top Farmers -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="dashboard-card">
+          <h3 class="font-semibold text-green-900 mb-4 flex items-center gap-2"><ion-icon name="hammer-outline"></ion-icon> Your Recent Bids</h3>
+          <div class="space-y-3">
+            <div class="flex justify-between items-center border-b border-gray-100 pb-2">
+              <div><p class="font-medium">Wheat (10q)</p><p class="text-xs text-gray-500">Bid: ₹2,280</p></div>
+              <span class="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">Outbid</span>
+            </div>
+            <div class="flex justify-between items-center border-b border-gray-100 pb-2">
+              <div><p class="font-medium">Tomato (5q)</p><p class="text-xs text-gray-500">Bid: ₹1,550</p></div>
+              <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">Leading</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <div><p class="font-medium">Potato (8q)</p><p class="text-xs text-gray-500">Bid: ₹1,120</p></div>
+              <span class="text-xs bg-gray-100 text-gray-800 px-2 py-1 rounded-full">Won</span>
+            </div>
+          </div>
+          <a href="bidding.html" class="text-sm text-green-600 font-medium mt-3 inline-block">View all bids →</a>
+        </div>
+
+        <div class="dashboard-card">
+          <h3 class="font-semibold text-green-900 mb-4 flex items-center gap-2"><ion-icon name="ribbon-outline"></ion-icon> Top Rated Farmers</h3>
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <img src="assets/imgs/farmer1.jpg" class="w-10 h-10 rounded-full object-cover border border-green-200" alt="Farmer">
+                <div><p class="font-medium">Ramesh Patel</p><p class="text-xs text-gray-500">Wheat · ★ 4.9</p></div>
+              </div>
+              <button class="text-xs bg-green-50 text-green-700 px-3 py-1 rounded-full border border-green-200">Contact</button>
+            </div>
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <img src="assets/imgs/farmer2.jpg" class="w-10 h-10 rounded-full object-cover border border-green-200" alt="Farmer">
+                <div><p class="font-medium">Sunita Devi</p><p class="text-xs text-gray-500">Tomato · ★ 4.8</p></div>
+              </div>
+              <button class="text-xs bg-green-50 text-green-700 px-3 py-1 rounded-full border border-green-200">Contact</button>
+            </div>
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <img src="assets/imgs/farmer3.jpg" class="w-10 h-10 rounded-full object-cover border border-green-200" alt="Farmer">
+                <div><p class="font-medium">Gurpreet Singh</p><p class="text-xs text-gray-500">Potato · ★ 4.7</p></div>
+              </div>
+              <button class="text-xs bg-green-50 text-green-700 px-3 py-1 rounded-full border border-green-200">Contact</button>
+            </div>
+          </div>
+          <a href="rating.html" class="text-sm text-green-600 font-medium mt-3 inline-block">See all farmers →</a>
+        </div>
+      </div>
+
+      <!-- Row 3: Market Insight & Quick Actions -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="dashboard-card">
+          <h3 class="font-semibold text-green-900 mb-3">📈 Market Insight</h3>
+          <div class="space-y-2">
+            <p class="text-sm"><span class="font-medium">Wheat</span> – demand rising, price +12% this week</p>
+            <p class="text-sm"><span class="font-medium">Tomato</span> – surplus expected, bid early</p>
+            <p class="text-sm"><span class="font-medium">Garlic</span> – trending, +40% in 7 days</p>
+          </div>
+        </div>
+        <div class="dashboard-card flex flex-col justify-between">
+          <h3 class="font-semibold text-green-900 mb-3">⚡ Quick Actions</h3>
+          <div class="flex flex-wrap gap-3">
+            <a href="bidding.html" class="bg-green-600 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-green-700">Browse Auctions</a>
+            <a href="messages.html" class="bg-white border border-green-300 text-green-700 px-4 py-2 rounded-full text-sm font-medium hover:bg-green-50">Message Farmers</a>
+            <a href="history.html" class="bg-white border border-green-300 text-green-700 px-4 py-2 rounded-full text-sm font-medium hover:bg-green-50">Order History</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="assets/js/main.js"></script>
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+<script>
+  const farmerDash = document.getElementById('farmerDashboard');
+  const buyerDash = document.getElementById('buyerDashboard');
+  const farmerBtn = document.getElementById('farmerToggle');
+  const buyerBtn = document.getElementById('buyerToggle');
+  const roleLabel = document.getElementById('activeRoleLabel');
+
+  function setRole(role) {
+    if (role === 'farmer') {
+      farmerDash.classList.remove('hidden');
+      buyerDash.classList.add('hidden');
+      roleLabel.innerText = 'Farmer';
+      farmerBtn.classList.add('bg-green-600', 'text-white');
+      farmerBtn.classList.remove('text-gray-600');
+      buyerBtn.classList.remove('bg-green-600', 'text-white');
+      buyerBtn.classList.add('text-gray-600');
+    } else {
+      farmerDash.classList.add('hidden');
+      buyerDash.classList.remove('hidden');
+      roleLabel.innerText = 'Buyer';
+      buyerBtn.classList.add('bg-green-600', 'text-white');
+      buyerBtn.classList.remove('text-gray-600');
+      farmerBtn.classList.remove('bg-green-600', 'text-white');
+      farmerBtn.classList.add('text-gray-600');
+    }
+  }
+
+  farmerBtn.onclick = () => setRole('farmer');
+  buyerBtn.onclick = () => setRole('buyer');
+
+  // Set initial button state
+  setRole('farmer');
+</script>
+
+</body>
+</html>

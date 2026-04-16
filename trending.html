@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grameen Setu – Trending</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .top-nav .brand { font-size: 19px !important; font-weight: 800 !important; }
+    .main h2 {
+      text-align: center; font-weight: 800; color: #14532d;
+      background: linear-gradient(145deg, #f0fdf4 0%, #dcfce7 100%);
+      padding: 0.9rem 2rem; border-radius: 60px; display: inline-block; margin: auto;
+      width: fit-content; box-shadow: 0 6px 12px -6px rgba(0, 40, 0, 0.08);
+      border: 1px solid #bbf7d0; font-size: 2rem;
+    }
+    .page-title-wrapper { display: flex; justify-content: center; margin-bottom: 1.8rem; }
+    .navigation ul li.hovered { background: #e6f7e6; border-left: 6px solid #166534; }
+    .main { background: #fafdfa; }
+    .trend-card { transition: all 0.25s ease; }
+    .trend-card:hover { transform: translateY(-6px) scale(1.02); box-shadow: 0 12px 25px rgba(0, 80, 0, 0.15); }
+  </style>
+</head>
+<body class="page-transition">
+
+<header class="top-nav">
+  <div class="brand text-center" style="margin:0 auto;">
+    <div style="font-size:30px;">🌾 Grameen Setu</div>
+    <div style="color:#d1fae5; font-size:13px;">Farm to Business</div>
+  </div>
+</header>
+
+<div class="container">
+  <div class="navigation">
+    <ul>
+      <li><a href="#"><span class="icon"></span><span class="title"><u>Grameen Setu</u></span></a></li>
+      <li><a href="index.html"><span class="icon"><ion-icon name="home-outline"></ion-icon></span><span class="title">Dashboard</span></a></li>
+      <li class="hovered"><a href="trending.html"><span class="icon"><ion-icon name="trending-up-outline"></ion-icon></span><span class="title">Trending</span></a></li>
+      <li><a href="messages.html"><span class="icon"><ion-icon name="chatbubble-outline"></ion-icon></span><span class="title">Messages</span></a></li>
+      <li><a href="bidding.html"><span class="icon"><ion-icon name="hammer-outline"></ion-icon></span><span class="title">Bidding</span></a></li>
+      <li><a href="history.html"><span class="icon"><ion-icon name="time-outline"></ion-icon></span><span class="title">History</span></a></li>
+      <li><a href="rating.html"><span class="icon"><ion-icon name="star-outline"></ion-icon></span><span class="title">Ratings</span></a></li>
+      <li><a href="settings.html"><span class="icon"><ion-icon name="settings-outline"></ion-icon></span><span class="title">Settings</span></a></li>
+      <li><a href="#" class="logout"><span class="icon"><ion-icon name="log-out-outline"></ion-icon></span><span class="title">Sign Out</span></a></li>
+    </ul>
+  </div>
+
+  <div class="main">
+    <div class="topbar">
+      <div class="toggle"><ion-icon name="menu-outline"></ion-icon></div>
+      <div class="search"><label><input type="text" placeholder="Search crops..."><ion-icon name="search-outline"></ion-icon></label></div>
+    </div>
+
+    <div class="px-5 py-6">
+      <div class="page-title-wrapper"><h2>🔥 Trending Crops</h2></div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+        <div class="trend-card bg-white p-5 rounded-2xl shadow-md border border-green-100">
+          <img src="assets/imgs/wheat-field.jpg" class="h-36 w-full object-cover rounded-xl mb-4" alt="Wheat">
+          <h3 class="font-bold text-lg text-green-900">🌾 Wheat</h3>
+          <p class="text-gray-600 text-sm">Demand increased by 28% this week</p>
+          <p class="text-green-700 font-bold text-xl mt-2">₹2,280 / quintal</p>
+        </div>
+        <div class="trend-card bg-white p-5 rounded-2xl shadow-md border border-green-100">
+          <img src="assets/imgs/tomato-basket.jpg" class="h-36 w-full object-cover rounded-xl mb-4" alt="Tomato">
+          <h3 class="font-bold text-lg text-green-900">🍅 Tomato</h3>
+          <p class="text-gray-600 text-sm">Market demand up by 15%</p>
+          <p class="text-green-700 font-bold text-xl mt-2">₹1,520 / quintal</p>
+        </div>
+        <div class="trend-card bg-white p-5 rounded-2xl shadow-md border border-green-100">
+          <img src="assets/imgs/garlic.jpg" class="h-36 w-full object-cover rounded-xl mb-4" alt="Garlic">
+          <h3 class="font-bold text-lg text-green-900">🧄 Garlic</h3>
+          <p class="text-gray-600 text-sm">New trending crop, +40% rise</p>
+          <p class="text-green-700 font-bold text-xl mt-2">₹3,200 / quintal</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="assets/js/main.js"></script>
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</body>
+</html>

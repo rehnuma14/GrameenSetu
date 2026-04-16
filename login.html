@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grameen Setu – Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Sora', sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+    }
+    .gs-brand { text-align: center; margin-bottom: 20px; }
+    .gs-brand h1 { font-size: 28px; font-weight: 700; color: #1b5e20; letter-spacing: -0.5px; margin-bottom: 4px; }
+    .gs-brand p { font-size: 13px; color: #388e3c; }
+    .gs-wrap {
+      background: #ffffff;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 400px;
+      overflow: hidden;
+      border: 1px solid #c8e6c9;
+      box-shadow: 0 4px 24px rgba(46, 125, 50, 0.08);
+    }
+    .gs-tabs { display: flex; border-bottom: 1px solid #e0e0e0; }
+    .gs-tab {
+      flex: 1; padding: 15px; text-align: center; font-size: 14px; font-weight: 500; cursor: pointer;
+      color: #9e9e9e; background: none; border: none; border-bottom: 3px solid transparent;
+      font-family: 'Sora', sans-serif; transition: color 0.2s, border-color 0.2s;
+    }
+    .gs-tab.active { color: #1b5e20; border-bottom-color: #2e7d32; font-weight: 600; }
+    .gs-form { padding: 28px 24px; display: flex; flex-direction: column; gap: 16px; }
+    .gs-form h2 { font-size: 20px; font-weight: 700; color: #1b5e20; margin-bottom: 4px; }
+    .gs-field { position: relative; }
+    .gs-field input {
+      width: 100%; padding: 11px 16px 11px 42px; border: 1px solid #c8e6c9; border-radius: 8px;
+      font-size: 14px; outline: none; background: #f9fbe7; color: #1b5e20; font-family: 'Sora', sans-serif;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .gs-field input:focus { border-color: #388e3c; background: #ffffff; }
+    .gs-field input::placeholder { color: #aaa; }
+    .gs-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: 14px; color: #81c784; pointer-events: none; }
+    .gs-row { display: flex; align-items: center; justify-content: space-between; font-size: 13px; }
+    .gs-row label { display: flex; align-items: center; gap: 7px; color: #555; cursor: pointer; }
+    .gs-row a { color: #2e7d32; text-decoration: none; }
+    .gs-row a:hover { text-decoration: underline; }
+    .gs-error { font-size: 13px; text-align: center; min-height: 16px; color: #c62828; }
+    .gs-error.success { color: #2e7d32; }
+    .gs-btn {
+      width: 100%; padding: 13px; background: #2e7d32; color: #ffffff; border: none; border-radius: 8px;
+      font-size: 15px; font-weight: 600; cursor: pointer; font-family: 'Sora', sans-serif;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .gs-btn:hover { background: #1b5e20; transform: scale(1.01); }
+    .gs-btn:active { transform: scale(0.99); }
+    .gs-hint { font-size: 11px; color: #bbb; text-align: center; line-height: 1.6; }
+    .gs-link { font-size: 13px; text-align: center; color: #777; }
+    .gs-link a { color: #2e7d32; text-decoration: none; font-weight: 600; }
+    .gs-role-label { font-size: 13px; font-weight: 500; color: #555; margin-bottom: 8px; }
+    .gs-role-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .gs-role {
+      border: 1px solid #c8e6c9; border-radius: 8px; padding: 14px 12px; display: flex; flex-direction: column;
+      align-items: center; gap: 6px; cursor: pointer; transition: border-color 0.2s, background 0.2s;
+    }
+    .gs-role.selected { border-color: #2e7d32; background: #e8f5e9; }
+    .gs-role i { font-size: 20px; color: #81c784; }
+    .gs-role.selected i { color: #2e7d32; }
+    .gs-role span { font-size: 13px; font-weight: 500; color: #333; }
+    .hidden { display: none; }
+  </style>
+</head>
+<body class="page-transition">
+
+<div class="gs-brand">
+  
+  <h1>🌱 Grameen Setu</h1>
+  <p>Farmer-first B2B marketplace</p>
+</div>
+
+<div class="gs-wrap">
+  <div class="gs-tabs">
+    <button class="gs-tab active" id="tab-login" onclick="switchTab('login')">Log In</button>
+    <button class="gs-tab" id="tab-signup" onclick="switchTab('signup')">Sign Up</button>
+  </div>
+
+  <!-- Login Form -->
+  <div id="form-login" class="gs-form">
+    <h2>Welcome back</h2>
+    <div class="gs-field">
+      <i class="far fa-envelope gs-icon"></i>
+      <input type="email" id="loginEmail" placeholder="kisan@example.com">
+    </div>
+    <div class="gs-field">
+      <i class="fas fa-lock gs-icon"></i>
+      <input type="password" id="loginPassword" placeholder="Password">
+    </div>
+    <div class="gs-row">
+      <label><input type="checkbox"> Remember me</label>
+      <a href="#">Forgot password?</a>
+    </div>
+    <div class="gs-error" id="loginError"></div>
+    <button class="gs-btn" onclick="doLogin()">Log in</button>
+    <p class="gs-hint">Demo: farmer@test.com / 1234 &nbsp;|&nbsp; buyer@test.com / 1234</p>
+  </div>
+
+  <!-- Signup Form -->
+  <div id="form-signup" class="gs-form hidden">
+    <h2>Create account</h2>
+    <div class="gs-field">
+      <i class="fas fa-user gs-icon"></i>
+      <input type="text" id="signupName" placeholder="Full name">
+    </div>
+    <div class="gs-field">
+      <i class="far fa-envelope gs-icon"></i>
+      <input type="email" id="signupEmail" placeholder="you@example.com">
+    </div>
+    <div class="gs-field">
+      <i class="fas fa-lock gs-icon"></i>
+      <input type="password" id="signupPassword" placeholder="Password (min. 4 characters)">
+    </div>
+    <div class="gs-field">
+      <i class="fas fa-lock gs-icon"></i>
+      <input type="password" id="signupConfirm" placeholder="Confirm password">
+    </div>
+    <div>
+      <p class="gs-role-label">I am a</p>
+      <div class="gs-role-grid">
+        <div class="gs-role selected" id="role-farmer" onclick="selectRole('farmer')">
+          <i class="fas fa-tractor"></i><span>Farmer</span>
+        </div>
+        <div class="gs-role" id="role-buyer" onclick="selectRole('buyer')">
+          <i class="fas fa-store"></i><span>Buyer</span>
+        </div>
+      </div>
+    </div>
+    <div class="gs-error" id="signupError"></div>
+    <button class="gs-btn" onclick="doSignup()">Create account</button>
+    <p class="gs-link">Already have an account? <a href="#" onclick="switchTab('login')">Log in</a></p>
+  </div>
+</div>
+
+<script>
+  function switchTab(tab) {
+    document.getElementById('form-login').classList.toggle('hidden', tab !== 'login');
+    document.getElementById('form-signup').classList.toggle('hidden', tab !== 'signup');
+    document.getElementById('tab-login').classList.toggle('active', tab === 'login');
+    document.getElementById('tab-signup').classList.toggle('active', tab === 'signup');
+    document.getElementById('loginError').textContent = '';
+    document.getElementById('signupError').textContent = '';
+  }
+  let selectedRole = 'farmer';
+  function selectRole(role) {
+    selectedRole = role;
+    document.getElementById('role-farmer').classList.toggle('selected', role === 'farmer');
+    document.getElementById('role-buyer').classList.toggle('selected', role === 'buyer');
+  }
+  const usersKey = 'grameen_users';
+  function getUsers() {
+    const stored = localStorage.getItem(usersKey);
+    if (stored) return JSON.parse(stored);
+    const defaults = [
+      { name: 'Raju Kumar', email: 'farmer@test.com', password: '1234', role: 'farmer', avatar: 'farmer-avatar.jpg' },
+      { name: 'Priya Sharma', email: 'buyer@test.com', password: '1234', role: 'buyer', avatar: 'buyer-avatar.jpg' }
+    ];
+    localStorage.setItem(usersKey, JSON.stringify(defaults));
+    return defaults;
+  }
+  function doLogin() {
+    const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+    const pwd = document.getElementById('loginPassword').value.trim();
+    const err = document.getElementById('loginError');
+    err.className = 'gs-error';
+    const users = getUsers();
+    const user = users.find(u => u.email.toLowerCase() === email);
+    if (!user) { err.textContent = 'Email not registered.'; return; }
+    if (user.password !== pwd) { err.textContent = 'Incorrect password.'; return; }
+    localStorage.setItem('logged_user', JSON.stringify(user));
+    window.location.href = 'index.html';
+  }
+  function doSignup() {
+    const name = document.getElementById('signupName').value.trim();
+    const email = document.getElementById('signupEmail').value.trim().toLowerCase();
+    const pwd = document.getElementById('signupPassword').value.trim();
+    const confirm = document.getElementById('signupConfirm').value.trim();
+    const err = document.getElementById('signupError');
+    err.className = 'gs-error';
+    if (!name || !email || !pwd || !confirm) { err.textContent = 'All fields are required.'; return; }
+    if (pwd !== confirm) { err.textContent = 'Passwords do not match.'; return; }
+    if (pwd.length < 4) { err.textContent = 'Password must be at least 4 characters.'; return; }
+    const users = getUsers();
+    if (users.some(u => u.email.toLowerCase() === email)) { err.textContent = 'Email already registered.'; return; }
+    const newUser = { name, email, password: pwd, role: selectedRole, avatar: 'default-avatar.jpg' };
+    users.push(newUser);
+    localStorage.setItem(usersKey, JSON.stringify(users));
+    localStorage.setItem('logged_user', JSON.stringify(newUser));
+    window.location.href = 'index.html';
+  }
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Enter') return;
+    if (!document.getElementById('form-login').classList.contains('hidden')) doLogin();
+    else doSignup();
+  });
+</script>
+</body>
+</html>

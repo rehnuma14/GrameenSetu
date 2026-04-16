@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grameen Setu – Settings</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .top-nav .brand { font-size: 19px !important; font-weight: 800 !important; }
+    .main h2 {
+      text-align: center; font-weight: 800; color: #14532d;
+      background: linear-gradient(145deg, #f0fdf4 0%, #dcfce7 100%);
+      padding: 0.9rem 2rem; border-radius: 60px; display: inline-block; margin: auto;
+      width: fit-content; box-shadow: 0 6px 12px -6px rgba(0, 40, 0, 0.08);
+      border: 1px solid #bbf7d0; font-size: 2rem;
+    }
+    .page-title-wrapper { display: flex; justify-content: center; margin-bottom: 1.8rem; }
+    .navigation ul li.hovered { background: #e6f7e6; border-left: 6px solid #166534; }
+    .main { background: #fafdfa; }
+  </style>
+</head>
+<body class="page-transition">
+
+<header class="top-nav">
+  <div class="brand text-center" style="margin:0 auto;">
+    <div style="font-size:30px;">🌾 Grameen Setu</div>
+    <div style="color:#d1fae5; font-size:13px;">Farm to Business</div>
+  </div>
+</header>
+
+<div class="container">
+  <div class="navigation">
+    <ul>
+      <li><a href="#"><span class="icon"></span><span class="title"><u>Grameen Setu</u></span></a></li>
+      <li><a href="index.html"><span class="icon"><ion-icon name="home-outline"></ion-icon></span><span class="title">Dashboard</span></a></li>
+      <li><a href="trending.html"><span class="icon"><ion-icon name="trending-up-outline"></ion-icon></span><span class="title">Trending</span></a></li>
+      <li><a href="messages.html"><span class="icon"><ion-icon name="chatbubble-outline"></ion-icon></span><span class="title">Messages</span></a></li>
+      <li><a href="bidding.html"><span class="icon"><ion-icon name="hammer-outline"></ion-icon></span><span class="title">Bidding</span></a></li>
+      <li><a href="history.html"><span class="icon"><ion-icon name="time-outline"></ion-icon></span><span class="title">History</span></a></li>
+      <li><a href="rating.html"><span class="icon"><ion-icon name="star-outline"></ion-icon></span><span class="title">Ratings</span></a></li>
+      <li class="hovered"><a href="settings.html"><span class="icon"><ion-icon name="settings-outline"></ion-icon></span><span class="title">Settings</span></a></li>
+      <li><a href="#" class="logout"><span class="icon"><ion-icon name="log-out-outline"></ion-icon></span><span class="title">Sign Out</span></a></li>
+    </ul>
+  </div>
+
+  <div class="main">
+    <div class="topbar">
+      <div class="toggle"><ion-icon name="menu-outline"></ion-icon></div>
+      <div class="search"><label><input type="text" placeholder="Search settings..."><ion-icon name="search-outline"></ion-icon></label></div>
+    </div>
+
+    <div class="px-5 py-6">
+      <div class="page-title-wrapper"><h2>⚙️ Settings</h2></div>
+      <div class="bg-white p-7 rounded-2xl shadow-md max-w-2xl mx-auto border border-green-100">
+        <div class="mb-5"><label class="block text-sm font-semibold text-gray-700 mb-1">Full name</label><input type="text" id="settingName" class="w-full border border-gray-300 rounded-xl p-3 focus:ring-2 focus:ring-green-400"></div>
+        <div class="mb-5"><label class="block text-sm font-semibold text-gray-700 mb-1">Phone</label><input type="text" id="settingPhone" class="w-full border border-gray-300 rounded-xl p-3 focus:ring-2 focus:ring-green-400"></div>
+        <div class="mb-5"><label class="block text-sm font-semibold text-gray-700 mb-1">Language</label>
+          <select class="w-full border border-gray-300 rounded-xl p-3 focus:ring-2 focus:ring-green-400 bg-white">
+            <option>English</option><option>हिन्दी</option><option>বাংলা</option>
+          </select>
+        </div>
+        <div class="mb-6"><label class="block text-sm font-semibold text-gray-700 mb-2">Profile picture</label>
+          <div class="flex items-center gap-4">
+            <img src="assets/imgs/farmer-avatar.jpg" class="w-14 h-14 rounded-full object-cover border-2 border-green-200" id="settingAvatar" alt="Avatar">
+            <button class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-5 py-2 rounded-full text-sm font-medium transition">Change</button>
+          </div>
+        </div>
+        <button class="w-full bg-green-700 hover:bg-green-800 text-white font-bold px-6 py-3 rounded-xl transition shadow save-settings-btn">Save changes</button>
+        <p class="text-xs text-gray-400 text-center mt-4">Changes will be reflected across the platform.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="assets/js/main.js"></script>
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const user = JSON.parse(localStorage.getItem("logged_user") || "null");
+    if (!user) { window.location.href = "login.html"; return; }
+    const nameEl = document.getElementById("settingName");
+    const phoneEl = document.getElementById("settingPhone");
+    if (nameEl) nameEl.value = user.name || "";
+    if (phoneEl) phoneEl.value = user.phone || "+91 98765 4321";
+    document.querySelector(".save-settings-btn")?.addEventListener("click", () => {
+      const newName = nameEl?.value.trim() || user.name;
+      const newPhone = phoneEl?.value.trim() || user.phone;
+      user.name = newName;
+      user.phone = newPhone;
+      localStorage.setItem("logged_user", JSON.stringify(user));
+      const users = JSON.parse(localStorage.getItem("grameen_users") || "[]");
+      const idx = users.findIndex(u => u.email === user.email);
+      if (idx > -1) { users[idx] = { ...users[idx], name: newName, phone: newPhone }; localStorage.setItem("grameen_users", JSON.stringify(users)); }
+      const ratingsKey = 'grameen_ratings_v2';
+      const ratings = JSON.parse(localStorage.getItem(ratingsKey) || '[]');
+      let updated = false;
+      ratings.forEach(r => { if (r.fromEmail === user.email) { r.fromName = newName; updated = true; } if (r.toEmail === user.email) { r.toName = newName; updated = true; } });
+      if (updated) localStorage.setItem(ratingsKey, JSON.stringify(ratings));
+      alert("✅ Settings saved successfully!");
+    });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grameen Setu – History</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .top-nav .brand {
+      font-size: 19px !important;
+      font-weight: 800 !important;
+    }
+    .main h2 {
+      text-align: center;
+      font-weight: 800;
+      color: #14532d;
+      background: linear-gradient(145deg, #f0fdf4 0%, #dcfce7 100%);
+      padding: 0.9rem 2rem;
+      border-radius: 60px;
+      display: inline-block;
+      margin: auto;
+      width: fit-content;
+      box-shadow: 0 6px 12px -6px rgba(0, 40, 0, 0.08);
+      border: 1px solid #bbf7d0;
+      font-size: 2rem;
+    }
+    .page-title-wrapper {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 1.8rem;
+    }
+    .main {
+      background: #fafdfa;
+    }
+    .navigation ul li.hovered {
+      background: #e6f7e6;
+      border-left: 6px solid #166534;
+    }
+    .history-card {
+      background: white;
+      border-radius: 18px;
+      padding: 1rem;
+      border: 1px solid #dcfce7;
+      transition: 0.25s ease;
+    }
+    .history-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(0, 80, 0, 0.12);
+    }
+    .active-tab {
+      color: #166534;
+      border-bottom: 2px solid #166534;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body class="page-transition">
+
+<header class="top-nav">
+  <div class="brand text-center" style="margin:0 auto;">
+    <div style="font-size:30px;">🌾 Grameen Setu</div>
+    <div style="color:#d1fae5; font-size:13px;">Farm to Business</div>
+  </div>
+</header>
+
+<div class="container">
+  <div class="navigation">
+    <ul>
+      <li><a href="#"><span class="icon"></span><span class="title"><u>Grameen Setu</u></span></a></li>
+      <li><a href="index.html"><span class="icon"><ion-icon name="home-outline"></ion-icon></span><span class="title">Dashboard</span></a></li>
+      <li><a href="trending.html"><span class="icon"><ion-icon name="trending-up-outline"></ion-icon></span><span class="title">Trending</span></a></li>
+      <li><a href="messages.html"><span class="icon"><ion-icon name="chatbubble-outline"></ion-icon></span><span class="title">Messages</span></a></li>
+      <li><a href="bidding.html"><span class="icon"><ion-icon name="hammer-outline"></ion-icon></span><span class="title">Bidding</span></a></li>
+      <li class="hovered"><a href="history.html"><span class="icon"><ion-icon name="time-outline"></ion-icon></span><span class="title">History</span></a></li>
+      <li><a href="rating.html"><span class="icon"><ion-icon name="star-outline"></ion-icon></span><span class="title">Ratings</span></a></li>
+      <li><a href="settings.html"><span class="icon"><ion-icon name="settings-outline"></ion-icon></span><span class="title">Settings</span></a></li>
+      <li><a href="#" class="logout"><span class="icon"><ion-icon name="log-out-outline"></ion-icon></span><span class="title">Sign Out</span></a></li>
+    </ul>
+  </div>
+
+  <div class="main">
+    <div class="topbar">
+      <div class="toggle"><ion-icon name="menu-outline"></ion-icon></div>
+      <div class="search">
+        <label>
+          <input type="text" placeholder="Search history...">
+          <ion-icon name="search-outline"></ion-icon>
+        </label>
+      </div>
+    </div>
+
+    <div class="px-5 py-6">
+      <div class="page-title-wrapper">
+        <h2>📜 Transaction History</h2>
+      </div>
+
+      <div class="flex justify-center gap-6 mb-6" id="historyTabs">
+        <button data-filter="all" class="filter-tab active-tab">All</button>
+        <button data-filter="bid" class="filter-tab text-gray-500">Bids</button>
+        <button data-filter="order" class="filter-tab text-gray-500">Orders</button>
+        <button data-filter="payment" class="filter-tab text-gray-500">Payments</button>
+      </div>
+
+      <div class="max-w-3xl mx-auto space-y-4">
+        <div class="history-card flex justify-between items-center history-item" data-type="bid">
+          <div class="flex items-center gap-4">
+            <img src="assets/imgs/wheat-icon.jpg" class="w-12 h-12 rounded-full border border-green-200" alt="Wheat">
+            <div>
+              <p class="font-semibold">Wheat – Sold</p>
+              <p class="text-sm text-gray-500">ABC Traders · 12 Mar 2026</p>
+            </div>
+          </div>
+          <div class="text-right">
+            <p class="text-green-600 font-bold">+ ₹23,000</p>
+            <span class="text-xs text-gray-400">Completed</span>
+          </div>
+        </div>
+
+        <div class="history-card flex justify-between items-center history-item" data-type="order">
+          <div class="flex items-center gap-4">
+            <img src="assets/imgs/tomato-icon.jpg" class="w-12 h-12 rounded-full border border-green-200" alt="Tomato">
+            <div>
+              <p class="font-semibold">Tomato – Bought</p>
+              <p class="text-sm text-gray-500">GreenFarm · 10 Mar 2026</p>
+            </div>
+          </div>
+          <div class="text-right">
+            <p class="text-red-600 font-bold">- ₹7,750</p>
+            <span class="text-xs text-gray-400">Delivered</span>
+          </div>
+        </div>
+
+        <div class="history-card flex justify-between items-center history-item" data-type="payment">
+          <div class="flex items-center gap-4">
+            <img src="assets/imgs/potato-icon.jpg" class="w-12 h-12 rounded-full border border-green-200" alt="Potato">
+            <div>
+              <p class="font-semibold">Potato – Bid Won</p>
+              <p class="text-sm text-gray-500">Auction #342 · 8 Mar 2026</p>
+            </div>
+          </div>
+          <div class="text-right">
+            <p class="text-green-600 font-bold">+ ₹9,200</p>
+            <span class="text-xs text-amber-600">Pending</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.filter-tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-tab').forEach(b => {
+        b.classList.remove('active-tab');
+        b.classList.add('text-gray-500');
+      });
+      btn.classList.add('active-tab');
+      btn.classList.remove('text-gray-500');
+      const filter = btn.dataset.filter;
+      document.querySelectorAll('.history-item').forEach(item => {
+        item.style.display = (filter === 'all' || item.dataset.type === filter) ? '' : 'none';
+      });
+    });
+  });
+</script>
+
+<script src="assets/js/main.js"></script>
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</body>
+</html>
