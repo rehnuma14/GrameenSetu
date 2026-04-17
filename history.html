@@ -2,33 +2,35 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Grameen Setu – History</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Grameen Setu – Transaction History & Analytics</title>
   <link rel="stylesheet" href="assets/css/style.css">
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <style>
     .top-nav .brand {
       font-size: 19px !important;
       font-weight: 800 !important;
+      letter-spacing: -0.3px;
     }
     .main h2 {
       text-align: center;
       font-weight: 800;
       color: #14532d;
       background: linear-gradient(145deg, #f0fdf4 0%, #dcfce7 100%);
-      padding: 0.9rem 2rem;
+      padding: 0.7rem 2rem;
       border-radius: 60px;
       display: inline-block;
       margin: auto;
       width: fit-content;
       box-shadow: 0 6px 12px -6px rgba(0, 40, 0, 0.08);
       border: 1px solid #bbf7d0;
-      font-size: 2rem;
+      font-size: 1.8rem;
     }
     .page-title-wrapper {
       display: flex;
       justify-content: center;
-      margin-bottom: 1.8rem;
+      margin-bottom: 1.5rem;
     }
     .main {
       background: #fafdfa;
@@ -39,28 +41,104 @@
     }
     .history-card {
       background: white;
-      border-radius: 18px;
+      border-radius: 20px;
       padding: 1rem;
-      border: 1px solid #dcfce7;
+      border: 1px solid #e2f3e4;
       transition: 0.25s ease;
+      box-shadow: 0 4px 10px rgba(0, 40, 0, 0.04);
+      cursor: pointer;
     }
     .history-card:hover {
       transform: translateY(-3px);
-      box-shadow: 0 10px 20px rgba(0, 80, 0, 0.12);
+      box-shadow: 0 12px 22px rgba(0, 80, 0, 0.12);
+    }
+    .filter-tab {
+      transition: all 0.2s;
+      cursor: pointer;
+      padding-bottom: 0.5rem;
     }
     .active-tab {
       color: #166534;
       border-bottom: 2px solid #166534;
       font-weight: 600;
     }
+    .stat-card {
+      background: white;
+      border-radius: 24px;
+      transition: transform 0.2s;
+    }
+    .stat-card:hover {
+      transform: translateY(-2px);
+    }
+    .status-badge {
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 0.25rem 0.7rem;
+      border-radius: 40px;
+      width: fit-content;
+    }
+    .avatar-icon {
+      width: 48px;
+      height: 48px;
+      background: #eef6ee;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+    }
+    /* Modal styles */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.2s ease;
+    }
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    .modal-container {
+      background: white;
+      max-width: 500px;
+      width: 90%;
+      border-radius: 32px;
+      box-shadow: 0 25px 40px rgba(0, 0, 0, 0.2);
+      transform: scale(0.95);
+      transition: transform 0.2s ease;
+    }
+    .modal-overlay.active .modal-container {
+      transform: scale(1);
+    }
+    @media (max-width: 640px) {
+      .history-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+      }
+      .history-card .text-right {
+        text-align: left;
+        width: 100%;
+      }
+    }
   </style>
 </head>
-<body class="page-transition">
+<body class="page-transition bg-[#fafdfa]">
 
 <header class="top-nav">
   <div class="brand text-center" style="margin:0 auto;">
     <div style="font-size:30px;">🌾 Grameen Setu</div>
-    <div style="color:#d1fae5; font-size:13px;">Farm to Business</div>
+    <div style="color:#d1fae5; font-size:13px;">Farm to Business · Complete Ledger</div>
   </div>
 </header>
 
@@ -84,72 +162,212 @@
       <div class="toggle"><ion-icon name="menu-outline"></ion-icon></div>
       <div class="search">
         <label>
-          <input type="text" placeholder="Search history...">
+          <input type="text" id="searchHistory" placeholder="Search by crop, party or transaction ID...">
           <ion-icon name="search-outline"></ion-icon>
         </label>
       </div>
     </div>
 
-    <div class="px-5 py-6">
+    <div class="px-4 md:px-6 py-6">
       <div class="page-title-wrapper">
         <h2>📜 Transaction History</h2>
       </div>
 
-      <div class="flex justify-center gap-6 mb-6" id="historyTabs">
-        <button data-filter="all" class="filter-tab active-tab">All</button>
-        <button data-filter="bid" class="filter-tab text-gray-500">Bids</button>
-        <button data-filter="order" class="filter-tab text-gray-500">Orders</button>
-        <button data-filter="payment" class="filter-tab text-gray-500">Payments</button>
+      <!-- Financial Summary Cards -->
+      <div class="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div class="stat-card p-4 flex items-center gap-3 border border-green-100 shadow-sm rounded-2xl">
+          <div class="bg-green-100 p-3 rounded-full"><ion-icon name="cash-outline" class="text-2xl text-green-700"></ion-icon></div>
+          <div><p class="text-xs text-gray-500">Total Earned</p><p class="text-xl font-bold text-green-800">₹2,84,500</p><p class="text-xs text-green-600">+18% vs last month</p></div>
+        </div>
+        <div class="stat-card p-4 flex items-center gap-3 border border-green-100 shadow-sm rounded-2xl">
+          <div class="bg-amber-100 p-3 rounded-full"><ion-icon name="cart-outline" class="text-2xl text-amber-700"></ion-icon></div>
+          <div><p class="text-xs text-gray-500">Total Spent</p><p class="text-xl font-bold text-amber-800">₹1,12,300</p><p class="text-xs text-amber-600">+5% increase</p></div>
+        </div>
+        <div class="stat-card p-4 flex items-center gap-3 border border-green-100 shadow-sm rounded-2xl">
+          <div class="bg-blue-100 p-3 rounded-full"><ion-icon name="hourglass-outline" class="text-2xl text-blue-700"></ion-icon></div>
+          <div><p class="text-xs text-gray-500">Pending Settlements</p><p class="text-xl font-bold text-blue-800">₹24,500</p><p class="text-xs text-blue-600">3 transactions</p></div>
+        </div>
+        <div class="stat-card p-4 flex items-center gap-3 border border-green-100 shadow-sm rounded-2xl">
+          <div class="bg-purple-100 p-3 rounded-full"><ion-icon name="star-outline" class="text-2xl text-purple-700"></ion-icon></div>
+          <div><p class="text-xs text-gray-500">Successful Trades</p><p class="text-xl font-bold text-purple-800">24</p><p class="text-xs text-purple-600">98% satisfaction</p></div>
+        </div>
       </div>
 
-      <div class="max-w-3xl mx-auto space-y-4">
-        <div class="history-card flex justify-between items-center history-item" data-type="bid">
-          <div class="flex items-center gap-4">
-            <img src="assets/imgs/wheat-icon.jpg" class="w-12 h-12 rounded-full border border-green-200" alt="Wheat">
-            <div>
-              <p class="font-semibold">Wheat – Sold</p>
-              <p class="text-sm text-gray-500">ABC Traders · 12 Mar 2026</p>
-            </div>
-          </div>
-          <div class="text-right">
-            <p class="text-green-600 font-bold">+ ₹23,000</p>
-            <span class="text-xs text-gray-400">Completed</span>
-          </div>
+      <!-- Filter Tabs & Date Range -->
+      <div class="max-w-5xl mx-auto flex flex-wrap justify-between items-center gap-4 mb-6">
+        <div class="flex gap-4" id="historyTabs">
+          <button data-filter="all" class="filter-tab active-tab text-base">All</button>
+          <button data-filter="bid" class="filter-tab text-gray-500 text-base">💰 Bids</button>
+          <button data-filter="order" class="filter-tab text-gray-500 text-base">📦 Orders</button>
+          <button data-filter="payment" class="filter-tab text-gray-500 text-base">💳 Payments</button>
         </div>
+        <div class="flex gap-2">
+          <select id="dateFilter" class="text-sm border border-green-200 rounded-full px-3 py-1.5 bg-white">
+            <option value="all">All time</option>
+            <option value="week">Last 7 days</option>
+            <option value="month">Last 30 days</option>
+            <option value="quarter">Last 90 days</option>
+          </select>
+        </div>
+      </div>
 
-        <div class="history-card flex justify-between items-center history-item" data-type="order">
-          <div class="flex items-center gap-4">
-            <img src="assets/imgs/tomato-icon.jpg" class="w-12 h-12 rounded-full border border-green-200" alt="Tomato">
-            <div>
-              <p class="font-semibold">Tomato – Bought</p>
-              <p class="text-sm text-gray-500">GreenFarm · 10 Mar 2026</p>
-            </div>
-          </div>
-          <div class="text-right">
-            <p class="text-red-600 font-bold">- ₹7,750</p>
-            <span class="text-xs text-gray-400">Delivered</span>
-          </div>
-        </div>
+      <!-- Transaction List -->
+      <div id="transactionsContainer" class="max-w-5xl mx-auto space-y-4">
+        <!-- JS injects transactions -->
+      </div>
 
-        <div class="history-card flex justify-between items-center history-item" data-type="payment">
-          <div class="flex items-center gap-4">
-            <img src="assets/imgs/potato-icon.jpg" class="w-12 h-12 rounded-full border border-green-200" alt="Potato">
-            <div>
-              <p class="font-semibold">Potato – Bid Won</p>
-              <p class="text-sm text-gray-500">Auction #342 · 8 Mar 2026</p>
-            </div>
-          </div>
-          <div class="text-right">
-            <p class="text-green-600 font-bold">+ ₹9,200</p>
-            <span class="text-xs text-amber-600">Pending</span>
-          </div>
-        </div>
+      <!-- Mini chart for spending vs earning trend -->
+      <div class="max-w-5xl mx-auto mt-10 bg-white rounded-2xl p-5 border border-green-100 shadow-sm">
+        <h3 class="font-bold text-green-900 flex items-center gap-2 mb-3"><ion-icon name="stats-chart-outline"></ion-icon> Financial Trend (Last 6 months)</h3>
+        <canvas id="trendChart" height="100" style="max-height: 200px;"></canvas>
       </div>
     </div>
   </div>
 </div>
 
+<!-- Modal Popup for Transaction Details -->
+<div id="transactionModal" class="modal-overlay">
+  <div class="modal-container overflow-hidden">
+    <div class="bg-gradient-to-r from-green-50 to-white p-5 border-b border-green-100 flex justify-between items-center">
+      <h3 class="font-bold text-xl text-green-900 flex items-center gap-2"><ion-icon name="receipt-outline"></ion-icon> Transaction Details</h3>
+      <button id="closeModalBtn" class="text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
+    </div>
+    <div id="modalContent" class="p-5 space-y-4">
+      <!-- dynamic content -->
+    </div>
+    <div class="p-4 bg-gray-50 flex justify-end">
+      <button id="modalCloseFooter" class="px-5 py-2 bg-green-700 text-white rounded-full text-sm hover:bg-green-800">Close</button>
+    </div>
+  </div>
+</div>
+
+<script src="assets/js/main.js"></script>
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
 <script>
+  // Enhanced transaction dataset (preserving original images)
+  const transactions = [
+    { id: "TX1001", type: "bid", crop: "Wheat", party: "ABC Traders", amount: 23000, date: "2026-03-12", status: "Completed", direction: "credit", imageKey: "wheat-icon.jpg", description: "Sold 10 quintals premium wheat", quantity: "10 q", pricePerUnit: "₹2,300/q", paymentMode: "Bank Transfer", orderId: "ORD-9821" },
+    { id: "TX1002", type: "order", crop: "Tomato", party: "GreenFarm", amount: 7750, date: "2026-03-10", status: "Delivered", direction: "debit", imageKey: "tomato-icon.jpg", description: "Bought 5 quintals organic tomato", quantity: "5 q", pricePerUnit: "₹1,550/q", paymentMode: "UPI", orderId: "ORD-9822" },
+    { id: "TX1003", type: "payment", crop: "Potato", party: "Auction #342", amount: 9200, date: "2026-03-08", status: "Pending", direction: "credit", imageKey: "potato-icon.jpg", description: "Won bid for 8 quintals potato", quantity: "8 q", pricePerUnit: "₹1,150/q", paymentMode: "Pending", orderId: "AUC-342" },
+    { id: "TX1004", type: "bid", crop: "Garlic", party: "Sunrise Exports", amount: 18400, date: "2026-03-05", status: "Completed", direction: "credit", imageKey: "garlic-icon.jpg", description: "Sold 5 quintals premium garlic", quantity: "5 q", pricePerUnit: "₹3,680/q", paymentMode: "Bank Transfer", orderId: "ORD-9823", fallbackIcon: "🧄" },
+    { id: "TX1005", type: "order", crop: "Rice (Basmati)", party: "RiceExports Ltd", amount: 24250, date: "2026-02-28", status: "Delivered", direction: "credit", imageKey: "rice-icon.jpg", description: "Sold 5 quintals basmati rice", quantity: "5 q", pricePerUnit: "₹4,850/q", paymentMode: "Bank Transfer", orderId: "ORD-9824", fallbackIcon: "🍚" },
+    { id: "TX1006", type: "payment", crop: "Chili", party: "SpiceJet", amount: 13900, date: "2026-02-20", status: "Completed", direction: "credit", imageKey: "chili-icon.jpg", description: "Payment for 2 quintals red chili", quantity: "2 q", pricePerUnit: "₹6,950/q", paymentMode: "UPI", orderId: "ORD-9825", fallbackIcon: "🌶️" },
+    { id: "TX1007", type: "bid", crop: "Tomato", party: "Metro Fresh", amount: 11200, date: "2026-02-15", status: "Outbid", direction: "debit", imageKey: "tomato-icon.jpg", description: "Bid placed but outbid", quantity: "7 q", pricePerUnit: "₹1,600/q", paymentMode: "-", orderId: "BID-451", fallbackIcon: "🍅" },
+    { id: "TX1008", type: "order", crop: "Potato", party: "SnackFoods Ltd", amount: 6300, date: "2026-02-10", status: "Delivered", direction: "credit", imageKey: "potato-icon.jpg", description: "Sold 5 quintals processing potato", quantity: "5 q", pricePerUnit: "₹1,260/q", paymentMode: "Bank Transfer", orderId: "ORD-9826" },
+    { id: "TX1009", type: "payment", crop: "Wheat", party: "FlourMills Co", amount: 31200, date: "2026-02-02", status: "Completed", direction: "credit", imageKey: "wheat-icon.jpg", description: "Bulk order 15 quintals", quantity: "15 q", pricePerUnit: "₹2,080/q", paymentMode: "Cheque", orderId: "ORD-9827" },
+    { id: "TX1010", type: "bid", crop: "Garlic", party: "Global Spices", amount: 26800, date: "2026-01-25", status: "Won", direction: "credit", imageKey: "garlic-icon.jpg", description: "Won auction for 8 quintals", quantity: "8 q", pricePerUnit: "₹3,350/q", paymentMode: "Bank Transfer", orderId: "AUC-456", fallbackIcon: "🧄" }
+  ];
+
+  let activeFilter = "all";
+  let dateRange = "all";
+
+  function filterByDate(transactionDate) {
+    if (dateRange === "all") return true;
+    const now = new Date();
+    const txDate = new Date(transactionDate);
+    const diffDays = (now - txDate) / (1000 * 60 * 60 * 24);
+    if (dateRange === "week") return diffDays <= 7;
+    if (dateRange === "month") return diffDays <= 30;
+    if (dateRange === "quarter") return diffDays <= 90;
+    return true;
+  }
+
+  function openModal(transaction) {
+    const modal = document.getElementById('transactionModal');
+    const modalContent = document.getElementById('modalContent');
+    const isCredit = transaction.direction === "credit";
+    const amountColor = isCredit ? "text-green-700" : "text-red-600";
+    const sign = isCredit ? "+" : "-";
+    const statusColor = transaction.status === "Completed" ? "bg-green-100 text-green-800" : transaction.status === "Delivered" ? "bg-blue-100 text-blue-800" : transaction.status === "Pending" ? "bg-yellow-100 text-yellow-800" : transaction.status === "Won" ? "bg-emerald-100 text-emerald-800" : "bg-gray-100 text-gray-800";
+    
+    modalContent.innerHTML = `
+      <div class="flex items-center gap-4 border-b border-gray-100 pb-4">
+        <div class="avatar-icon w-16 h-16 text-3xl">
+          <img src="assets/imgs/${transaction.imageKey}" class="w-16 h-16 rounded-full object-cover border-2 border-green-200" alt="${transaction.crop}" onerror="this.style.display='none'; this.parentElement.innerHTML='<span class=\'text-4xl\'>${transaction.fallbackIcon || (transaction.crop === 'Wheat' ? '🌾' : transaction.crop === 'Tomato' ? '🍅' : '🥔')}</span>';">
+        </div>
+        <div>
+          <p class="font-bold text-xl text-gray-800">${transaction.crop}</p>
+          <p class="text-sm text-gray-500 capitalize">${transaction.type} · ${transaction.party}</p>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-3 text-sm">
+        <div><span class="text-gray-500">Transaction ID</span><p class="font-mono font-semibold">${transaction.id}</p></div>
+        <div><span class="text-gray-500">Date & Time</span><p class="font-semibold">${new Date(transaction.date).toLocaleDateString('en-IN', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' })}</p></div>
+        <div><span class="text-gray-500">Amount</span><p class="font-bold text-lg ${amountColor}">${sign} ₹${transaction.amount.toLocaleString()}</p></div>
+        <div><span class="text-gray-500">Status</span><span class="status-badge ${statusColor} inline-block mt-1">${transaction.status}</span></div>
+        <div><span class="text-gray-500">Quantity</span><p class="font-semibold">${transaction.quantity || '—'}</p></div>
+        <div><span class="text-gray-500">Price/Unit</span><p class="font-semibold">${transaction.pricePerUnit || '—'}</p></div>
+        <div><span class="text-gray-500">Payment Mode</span><p class="font-semibold">${transaction.paymentMode || '—'}</p></div>
+        <div><span class="text-gray-500">Order/Bid Ref</span><p class="font-mono text-xs">${transaction.orderId || '—'}</p></div>
+      </div>
+      <div class="bg-green-50 p-3 rounded-xl mt-2">
+        <p class="text-xs text-gray-600 font-medium">📝 Description</p>
+        <p class="text-sm text-gray-700">${transaction.description}</p>
+      </div>
+      ${transaction.status === 'Pending' ? '<div class="bg-yellow-50 p-2 rounded-lg text-xs text-yellow-800 flex items-center gap-2"><ion-icon name="alert-circle-outline"></ion-icon> This transaction is pending settlement. Expected within 2-3 business days.</div>' : ''}
+    `;
+    modal.classList.add('active');
+  }
+
+  function closeModal() {
+    document.getElementById('transactionModal').classList.remove('active');
+  }
+
+  function renderTransactions() {
+    const container = document.getElementById('transactionsContainer');
+    let filtered = transactions.filter(t => (activeFilter === "all" || t.type === activeFilter) && filterByDate(t.date));
+    const searchTerm = document.getElementById('searchHistory')?.value.toLowerCase() || "";
+    if (searchTerm) {
+      filtered = filtered.filter(t => t.crop.toLowerCase().includes(searchTerm) || t.party.toLowerCase().includes(searchTerm) || t.id.toLowerCase().includes(searchTerm));
+    }
+    if (filtered.length === 0) {
+      container.innerHTML = `<div class="text-center py-12 bg-white rounded-2xl border border-green-100"><ion-icon name="document-text-outline" class="text-5xl text-gray-300"></ion-icon><p class="text-gray-500 mt-2">No transactions found</p></div>`;
+      return;
+    }
+    container.innerHTML = filtered.map(tx => {
+      const isCredit = tx.direction === "credit";
+      const amountClass = isCredit ? "text-green-600" : "text-red-600";
+      const sign = isCredit ? "+" : "-";
+      const imgSrc = `assets/imgs/${tx.imageKey}`;
+      const fallbackIcon = tx.fallbackIcon || (tx.crop === "Wheat" ? "🌾" : tx.crop === "Tomato" ? "🍅" : tx.crop === "Potato" ? "🥔" : "🌱");
+      const statusColor = tx.status === "Completed" ? "bg-green-100 text-green-800" : tx.status === "Delivered" ? "bg-blue-100 text-blue-800" : tx.status === "Pending" ? "bg-yellow-100 text-yellow-800" : "bg-gray-100 text-gray-800";
+      return `
+        <div class="history-card flex justify-between items-center flex-wrap md:flex-nowrap gap-3" data-transaction='${JSON.stringify(tx)}'>
+          <div class="flex items-center gap-4 min-w-[200px]">
+            <div class="avatar-icon">
+              <img src="${imgSrc}" class="w-12 h-12 rounded-full object-cover border border-green-200" alt="${tx.crop}" onerror="this.style.display='none'; this.parentElement.innerHTML='<span class=\'text-2xl\'>${fallbackIcon}</span>';">
+            </div>
+            <div>
+              <p class="font-semibold text-gray-800">${tx.crop} – ${tx.type === 'bid' ? 'Bid' : tx.type === 'order' ? 'Order' : 'Payment'}</p>
+              <p class="text-sm text-gray-500">${tx.party} · ${new Date(tx.date).toLocaleDateString('en-IN')}</p>
+              <p class="text-xs text-gray-400">${tx.description.substring(0, 50)}</p>
+            </div>
+          </div>
+          <div class="text-right md:text-left">
+            <p class="font-bold text-lg ${amountClass}">${sign} ₹${tx.amount.toLocaleString()}</p>
+            <div class="flex flex-col items-end gap-1">
+              <span class="status-badge ${statusColor}">${tx.status}</span>
+              <span class="text-xs text-gray-400 font-mono">ID: ${tx.id}</span>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    // Attach click handlers for each card to open modal
+    document.querySelectorAll('.history-card').forEach(card => {
+      card.addEventListener('click', (e) => {
+        // Prevent if clicking on any interactive inner element (though none)
+        e.stopPropagation();
+        const txData = JSON.parse(card.getAttribute('data-transaction'));
+        openModal(txData);
+      });
+    });
+  }
+
+  // Event listeners for filters
   document.querySelectorAll('.filter-tab').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.filter-tab').forEach(b => {
@@ -158,16 +376,60 @@
       });
       btn.classList.add('active-tab');
       btn.classList.remove('text-gray-500');
-      const filter = btn.dataset.filter;
-      document.querySelectorAll('.history-item').forEach(item => {
-        item.style.display = (filter === 'all' || item.dataset.type === filter) ? '' : 'none';
-      });
+      activeFilter = btn.dataset.filter;
+      renderTransactions();
     });
   });
-</script>
 
-<script src="assets/js/main.js"></script>
-<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
-<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+  document.getElementById('dateFilter')?.addEventListener('change', (e) => {
+    dateRange = e.target.value;
+    renderTransactions();
+  });
+
+  document.getElementById('searchHistory')?.addEventListener('input', () => {
+    renderTransactions();
+  });
+
+  // Modal close handlers
+  document.getElementById('closeModalBtn')?.addEventListener('click', closeModal);
+  document.getElementById('modalCloseFooter')?.addEventListener('click', closeModal);
+  document.getElementById('transactionModal')?.addEventListener('click', (e) => {
+    if (e.target === document.getElementById('transactionModal')) closeModal();
+  });
+
+  // Sidebar toggle
+  const toggleBtn = document.querySelector('.toggle');
+  const navigation = document.querySelector('.navigation');
+  if (toggleBtn && navigation) {
+    toggleBtn.addEventListener('click', () => navigation.classList.toggle('active'));
+  }
+
+  // Chart initialization
+  let trendChart;
+  function initTrendChart() {
+    const ctx = document.getElementById('trendChart').getContext('2d');
+    const months = ['Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb'];
+    const earnings = [32500, 41000, 38700, 52200, 49500, 58700];
+    const spendings = [12200, 9800, 14500, 17800, 21200, 18700];
+    trendChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: months,
+        datasets: [
+          { label: 'Earnings (₹)', data: earnings, borderColor: '#15803d', backgroundColor: 'rgba(21,128,61,0.05)', tension: 0.3, fill: true, pointBackgroundColor: '#166534' },
+          { label: 'Spendings (₹)', data: spendings, borderColor: '#d97706', backgroundColor: 'rgba(217,119,6,0.05)', tension: 0.3, fill: true, pointBackgroundColor: '#b45309' }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        plugins: { legend: { position: 'top' }, tooltip: { mode: 'index' } }
+      }
+    });
+  }
+
+  renderTransactions();
+  initTrendChart();
+</script>
 </body>
 </html>
