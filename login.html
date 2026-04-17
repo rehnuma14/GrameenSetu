@@ -6,6 +6,7 @@
   <title>Grameen Setu – Login</title>
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="/GrameenSetu/assets/css/popup.css">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -61,7 +62,6 @@
     }
     .gs-btn:hover { background: #1b5e20; transform: scale(1.01); }
     .gs-btn:active { transform: scale(0.99); }
-    .gs-hint { font-size: 11px; color: #bbb; text-align: center; line-height: 1.6; }
     .gs-link { font-size: 13px; text-align: center; color: #777; }
     .gs-link a { color: #2e7d32; text-decoration: none; font-weight: 600; }
     .gs-role-label { font-size: 13px; font-weight: 500; color: #555; margin-bottom: 8px; }
@@ -80,7 +80,6 @@
 <body class="page-transition">
 
 <div class="gs-brand">
-  
   <h1>🌱 Grameen Setu</h1>
   <p>Farmer-first B2B marketplace</p>
 </div>
@@ -96,11 +95,11 @@
     <h2>Welcome back</h2>
     <div class="gs-field">
       <i class="far fa-envelope gs-icon"></i>
-      <input type="email" id="loginEmail" placeholder="kisan@example.com">
+      <input type="email" id="loginEmail" name="email_<?php echo rand(); ?>" placeholder="your@email.com" autocomplete="new-password">
     </div>
     <div class="gs-field">
       <i class="fas fa-lock gs-icon"></i>
-      <input type="password" id="loginPassword" placeholder="Password">
+      <input type="password" id="loginPassword" name="pwd_<?php echo rand(); ?>" placeholder="Password" autocomplete="new-password">
     </div>
     <div class="gs-row">
       <label><input type="checkbox"> Remember me</label>
@@ -108,7 +107,6 @@
     </div>
     <div class="gs-error" id="loginError"></div>
     <button class="gs-btn" onclick="doLogin()">Log in</button>
-    <p class="gs-hint">Demo: farmer@test.com / 1234 &nbsp;|&nbsp; buyer@test.com / 1234</p>
   </div>
 
   <!-- Signup Form -->
@@ -121,6 +119,10 @@
     <div class="gs-field">
       <i class="far fa-envelope gs-icon"></i>
       <input type="email" id="signupEmail" placeholder="you@example.com">
+    </div>
+    <div class="gs-field">
+      <i class="fas fa-phone gs-icon"></i>
+      <input type="tel" id="signupPhone" placeholder="Phone number">
     </div>
     <div class="gs-field">
       <i class="fas fa-lock gs-icon"></i>
@@ -147,7 +149,24 @@
   </div>
 </div>
 
+<!-- Verification popup script -->
+<script src="/GrameenSetu/assets/js/verification.js"></script>
+
 <script>
+  // ==================== CLEAR AUTOFILL ON LOAD ====================
+  window.addEventListener('DOMContentLoaded', function() {
+    // Force clear any autofilled values
+    const emailField = document.getElementById('loginEmail');
+    const pwdField = document.getElementById('loginPassword');
+    if (emailField) emailField.value = '';
+    if (pwdField) pwdField.value = '';
+    
+    // Also remove readonly trick – just ensure fields are empty
+    // Additional: reset form if needed
+    document.getElementById('form-login').reset();
+  });
+
+  // ==================== TABS ====================
   function switchTab(tab) {
     document.getElementById('form-login').classList.toggle('hidden', tab !== 'login');
     document.getElementById('form-signup').classList.toggle('hidden', tab !== 'signup');
@@ -155,58 +174,161 @@
     document.getElementById('tab-signup').classList.toggle('active', tab === 'signup');
     document.getElementById('loginError').textContent = '';
     document.getElementById('signupError').textContent = '';
+    
+    // Clear login fields when switching to login tab
+    if (tab === 'login') {
+      document.getElementById('loginEmail').value = '';
+      document.getElementById('loginPassword').value = '';
+    }
   }
+
+  // ==================== ROLE ====================
   let selectedRole = 'farmer';
   function selectRole(role) {
     selectedRole = role;
     document.getElementById('role-farmer').classList.toggle('selected', role === 'farmer');
     document.getElementById('role-buyer').classList.toggle('selected', role === 'buyer');
   }
-  const usersKey = 'grameen_users';
-  function getUsers() {
-    const stored = localStorage.getItem(usersKey);
-    if (stored) return JSON.parse(stored);
-    const defaults = [
-      { name: 'Raju Kumar', email: 'farmer@test.com', password: '1234', role: 'farmer', avatar: 'farmer-avatar.jpg' },
-      { name: 'Priya Sharma', email: 'buyer@test.com', password: '1234', role: 'buyer', avatar: 'buyer-avatar.jpg' }
-    ];
-    localStorage.setItem(usersKey, JSON.stringify(defaults));
-    return defaults;
-  }
-  function doLogin() {
+
+  // ==================== LOGIN ====================
+  async function doLogin() {
     const email = document.getElementById('loginEmail').value.trim().toLowerCase();
     const pwd = document.getElementById('loginPassword').value.trim();
     const err = document.getElementById('loginError');
     err.className = 'gs-error';
-    const users = getUsers();
-    const user = users.find(u => u.email.toLowerCase() === email);
-    if (!user) { err.textContent = 'Email not registered.'; return; }
-    if (user.password !== pwd) { err.textContent = 'Incorrect password.'; return; }
-    localStorage.setItem('logged_user', JSON.stringify(user));
-    window.location.href = 'index.html';
+    err.textContent = '';
+
+    if (!email || !pwd) {
+      err.textContent = 'Email and password are required.';
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('email', email);
+    formData.append('password', pwd);
+
+    try {
+      const response = await fetch('/GrameenSetu/api/login_new.php', {
+        method: 'POST',
+        body: formData
+      });
+      const data = await response.json();
+
+      if (data.status === 'success') {
+        localStorage.setItem('logged_user', JSON.stringify(data.user));
+        window.location.href = 'index.html';
+      } 
+      else if (data.needs_verification) {
+        if (data.verification_code) window._lastVerificationCode = data.verification_code;
+        VerificationPopup.create(data.user_id, data.email, () => {
+          err.className = 'gs-error success';
+          err.textContent = '✓ Email verified! Logging you in...';
+          setTimeout(() => {
+            doLogin();
+          }, 1000);
+        });
+      } 
+      else {
+        err.textContent = data.message || 'Login failed. Please try again.';
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      err.textContent = 'Network error. Please try again.';
+    }
   }
-  function doSignup() {
+
+  // ==================== SIGNUP ====================
+  async function doSignup() {
     const name = document.getElementById('signupName').value.trim();
     const email = document.getElementById('signupEmail').value.trim().toLowerCase();
+    const phone = document.getElementById('signupPhone').value.trim();
     const pwd = document.getElementById('signupPassword').value.trim();
     const confirm = document.getElementById('signupConfirm').value.trim();
     const err = document.getElementById('signupError');
     err.className = 'gs-error';
-    if (!name || !email || !pwd || !confirm) { err.textContent = 'All fields are required.'; return; }
-    if (pwd !== confirm) { err.textContent = 'Passwords do not match.'; return; }
-    if (pwd.length < 4) { err.textContent = 'Password must be at least 4 characters.'; return; }
-    const users = getUsers();
-    if (users.some(u => u.email.toLowerCase() === email)) { err.textContent = 'Email already registered.'; return; }
-    const newUser = { name, email, password: pwd, role: selectedRole, avatar: 'default-avatar.jpg' };
-    users.push(newUser);
-    localStorage.setItem(usersKey, JSON.stringify(users));
-    localStorage.setItem('logged_user', JSON.stringify(newUser));
-    window.location.href = 'index.html';
+    err.textContent = '';
+
+    if (!name || !email || !phone || !pwd || !confirm) {
+      err.textContent = 'All fields are required.';
+      return;
+    }
+    if (pwd !== confirm) {
+      err.textContent = 'Passwords do not match.';
+      return;
+    }
+    if (pwd.length < 4) {
+      err.textContent = 'Password must be at least 4 characters.';
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('full_name', name);
+    formData.append('email', email);
+    formData.append('phone_number', phone);
+    formData.append('password', pwd);
+    formData.append('role', selectedRole);
+
+    try {
+      const response = await fetch('/GrameenSetu/api/signup_new.php', {
+        method: 'POST',
+        body: formData
+      });
+      
+      if (!response.ok) {
+        err.textContent = `Server error (${response.status}). Please try again.`;
+        return;
+      }
+      
+      let data;
+      try {
+        data = await response.json();
+      } catch (parseError) {
+        console.error('JSON Parse error:', parseError);
+        const text = await response.text();
+        console.error('Raw response:', text.substring(0, 200));
+        err.textContent = 'Server returned invalid response. Please check console and try again.';
+        return;
+      }
+
+      if (data.status === 'success') {
+        if (data.verification_code) {
+          window._lastVerificationCode = data.verification_code;
+        }
+        VerificationPopup.create(data.user_id, data.email, () => {
+          err.className = 'gs-error success';
+          err.textContent = '✓ Account verified! Redirecting to login...';
+          
+          document.getElementById('signupName').value = '';
+          document.getElementById('signupEmail').value = '';
+          document.getElementById('signupPhone').value = '';
+          document.getElementById('signupPassword').value = '';
+          document.getElementById('signupConfirm').value = '';
+          
+          document.getElementById('loginEmail').value = email;
+          document.getElementById('loginPassword').value = pwd;
+          switchTab('login');
+          
+          setTimeout(() => {
+            doLogin();
+          }, 1500);
+        });
+      } else {
+        err.textContent = data.message || 'Registration failed. Please try again.';
+      }
+    } catch (error) {
+      console.error('Signup error:', error);
+      err.textContent = 'Network error. Please try again. Check console for details.';
+    }
   }
+
+  // Allow Enter key to submit active form
   document.addEventListener('keydown', (e) => {
     if (e.key !== 'Enter') return;
-    if (!document.getElementById('form-login').classList.contains('hidden')) doLogin();
-    else doSignup();
+    if (!document.getElementById('form-login').classList.contains('hidden')) {
+      doLogin();
+    } else {
+      doSignup();
+    }
   });
 </script>
 </body>

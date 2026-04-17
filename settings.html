@@ -36,7 +36,7 @@
       <li><a href="index.html"><span class="icon"><ion-icon name="home-outline"></ion-icon></span><span class="title">Dashboard</span></a></li>
       <li><a href="trending.html"><span class="icon"><ion-icon name="trending-up-outline"></ion-icon></span><span class="title">Trending</span></a></li>
       <li><a href="messages.html"><span class="icon"><ion-icon name="chatbubble-outline"></ion-icon></span><span class="title">Messages</span></a></li>
-      <li><a href="bidding.html"><span class="icon"><ion-icon name="hammer-outline"></ion-icon></span><span class="title">Bidding</span></a></li>
+      <li><a href="bidding.php"><span class="icon"><ion-icon name="hammer-outline"></ion-icon></span><span class="title">Bidding</span></a></li>
       <li><a href="history.html"><span class="icon"><ion-icon name="time-outline"></ion-icon></span><span class="title">History</span></a></li>
       <li><a href="rating.html"><span class="icon"><ion-icon name="star-outline"></ion-icon></span><span class="title">Ratings</span></a></li>
       <li class="hovered"><a href="settings.html"><span class="icon"><ion-icon name="settings-outline"></ion-icon></span><span class="title">Settings</span></a></li>
@@ -78,26 +78,42 @@
 <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 <script>
   document.addEventListener("DOMContentLoaded", () => {
+    // Check if user is logged in (from localStorage, as before)
     const user = JSON.parse(localStorage.getItem("logged_user") || "null");
-    if (!user) { window.location.href = "login.html"; return; }
+    if (!user) { 
+      window.location.href = "login.html"; 
+      return; 
+    }
     const nameEl = document.getElementById("settingName");
     const phoneEl = document.getElementById("settingPhone");
     if (nameEl) nameEl.value = user.name || "";
     if (phoneEl) phoneEl.value = user.phone || "+91 98765 4321";
+    
     document.querySelector(".save-settings-btn")?.addEventListener("click", () => {
       const newName = nameEl?.value.trim() || user.name;
       const newPhone = phoneEl?.value.trim() || user.phone;
       user.name = newName;
       user.phone = newPhone;
       localStorage.setItem("logged_user", JSON.stringify(user));
+      
+      // Also update in the "grameen_users" array if exists
       const users = JSON.parse(localStorage.getItem("grameen_users") || "[]");
       const idx = users.findIndex(u => u.email === user.email);
-      if (idx > -1) { users[idx] = { ...users[idx], name: newName, phone: newPhone }; localStorage.setItem("grameen_users", JSON.stringify(users)); }
+      if (idx > -1) { 
+        users[idx] = { ...users[idx], name: newName, phone: newPhone }; 
+        localStorage.setItem("grameen_users", JSON.stringify(users)); 
+      }
+      
+      // Update ratings if stored
       const ratingsKey = 'grameen_ratings_v2';
       const ratings = JSON.parse(localStorage.getItem(ratingsKey) || '[]');
       let updated = false;
-      ratings.forEach(r => { if (r.fromEmail === user.email) { r.fromName = newName; updated = true; } if (r.toEmail === user.email) { r.toName = newName; updated = true; } });
+      ratings.forEach(r => { 
+        if (r.fromEmail === user.email) { r.fromName = newName; updated = true; } 
+        if (r.toEmail === user.email) { r.toName = newName; updated = true; } 
+      });
       if (updated) localStorage.setItem(ratingsKey, JSON.stringify(ratings));
+      
       alert("✅ Settings saved successfully!");
     });
   });
