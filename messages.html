@@ -2,35 +2,128 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Grameen Setu – Messages</title>
-  <link rel="stylesheet" href="assets/css/style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Grameen Setu – Secure Messaging Hub</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="assets/css/style.css">
   <style>
-    .top-nav .brand { font-size: 19px !important; font-weight: 800 !important; }
-    .main h2 {
-      text-align: center; font-weight: 800; color: #14532d;
+    * {
+      transition: all 0.2s ease;
+    }
+    .top-nav .brand {
+      font-size: 19px !important;
+      font-weight: 800 !important;
+      letter-spacing: -0.3px;
+    }
+    .main h2.page-heading {
+      text-align: center;
+      font-weight: 800;
+      color: #14532d;
       background: linear-gradient(145deg, #f0fdf4 0%, #dcfce7 100%);
-      padding: 0.9rem 2rem; border-radius: 60px; display: inline-block; margin: auto;
-      width: fit-content; box-shadow: 0 6px 12px -6px rgba(0, 40, 0, 0.08);
-      border: 1px solid #bbf7d0; font-size: 2rem;
+      padding: 0.7rem 2rem;
+      border-radius: 60px;
+      display: inline-block;
+      margin: auto;
+      width: fit-content;
+      box-shadow: 0 6px 14px -6px rgba(0, 40, 0, 0.08);
+      border: 1px solid #bbf7d0;
+      font-size: 1.8rem;
     }
-    .page-title-wrapper { display: flex; justify-content: center; margin-bottom: 1.8rem; }
-    .main { background: #fafdfa; }
-    .navigation ul li.hovered { background: #e6f7e6; border-left: 6px solid #166534; }
-    .message-card {
-      background: white; border-radius: 16px; padding: 1rem; border: 1px solid #dcfce7;
-      transition: 0.25s ease;
+    .page-title-wrapper {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 1.5rem;
     }
-    .message-card:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0, 80, 0, 0.12); }
+    .main {
+      background: #fafdfa;
+    }
+    .navigation ul li.hovered {
+      background: #e6f7e6;
+      border-left: 6px solid #166534;
+    }
+    /* Custom chat scroll */
+    .chat-messages::-webkit-scrollbar {
+      width: 5px;
+    }
+    .chat-messages::-webkit-scrollbar-track {
+      background: #eef2e6;
+      border-radius: 10px;
+    }
+    .chat-messages::-webkit-scrollbar-thumb {
+      background: #9eca9e;
+      border-radius: 10px;
+    }
+    .conversation-item.active {
+      background: #eef9ef;
+      border-left: 4px solid #15803d;
+    }
+    .message-bubble {
+      max-width: 75%;
+      border-radius: 22px;
+      padding: 0.6rem 1rem;
+      word-break: break-word;
+    }
+    .message-out {
+      background: #15803d;
+      color: white;
+      border-bottom-right-radius: 6px;
+    }
+    .message-in {
+      background: #f1f5f9;
+      color: #1e293b;
+      border-bottom-left-radius: 6px;
+    }
+    .typing-indicator span {
+      background: #cbd5e1;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+      animation: blink 1.4s infinite both;
+    }
+    .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+    .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes blink {
+      0% { opacity: 0.2; transform: translateY(0); }
+      50% { opacity: 1; transform: translateY(-3px); background: #15803d; }
+      100% { opacity: 0.2; transform: translateY(0); }
+    }
+    .avatar-fallback {
+      width: 48px;
+      height: 48px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      background: #dcfce7;
+      color: #166534;
+      font-size: 1.2rem;
+    }
+    @media (max-width: 768px) {
+      .chat-panel {
+        position: fixed;
+        inset: 0;
+        z-index: 50;
+        background: white;
+        transform: translateX(100%);
+        transition: transform 0.2s;
+      }
+      .chat-panel.open {
+        transform: translateX(0);
+      }
+      .back-to-list {
+        display: block;
+      }
+    }
   </style>
 </head>
-<body class="page-transition">
+<body class="page-transition bg-[#fafdfa]">
 
 <header class="top-nav">
   <div class="brand text-center" style="margin:0 auto;">
     <div style="font-size:30px;">🌾 Grameen Setu</div>
-    <div style="color:#d1fae5; font-size:13px;">Farm to Business</div>
+    <div style="color:#d1fae5; font-size:13px;">Farm to Business · Trusted Connect</div>
   </div>
 </header>
 
@@ -40,7 +133,7 @@
       <li><a href="#"><span class="icon"></span><span class="title"><u>Grameen Setu</u></span></a></li>
       <li><a href="index.html"><span class="icon"><ion-icon name="home-outline"></ion-icon></span><span class="title">Dashboard</span></a></li>
       <li><a href="trending.html"><span class="icon"><ion-icon name="trending-up-outline"></ion-icon></span><span class="title">Trending</span></a></li>
-      <li class="hovered"><a href="messages.html"><span class="icon"><ion-icon name="chatbubble-outline"></ion-icon></span><span class="title">Messages</span></a></li>
+      <li class="hovered"><a href="messages.html"><span class="icon"><ion-icon name="chatbubble-ellipses-outline"></ion-icon></span><span class="title">Messages</span></a></li>
       <li><a href="bidding.php"><span class="icon"><ion-icon name="hammer-outline"></ion-icon></span><span class="title">Bidding</span></a></li>
       <li><a href="history.html"><span class="icon"><ion-icon name="time-outline"></ion-icon></span><span class="title">History</span></a></li>
       <li><a href="rating.html"><span class="icon"><ion-icon name="star-outline"></ion-icon></span><span class="title">Ratings</span></a></li>
@@ -54,37 +147,63 @@
       <div class="toggle"><ion-icon name="menu-outline"></ion-icon></div>
       <div class="search">
         <label>
-          <input type="text" placeholder="Search messages...">
+          <input type="text" placeholder="Search messages, farmers or buyers...">
           <ion-icon name="search-outline"></ion-icon>
         </label>
       </div>
     </div>
 
-    <div class="px-5 py-6">
-      <div class="page-title-wrapper"><h2>💬 Messages</h2></div>
-      <div class="max-w-2xl mx-auto space-y-4">
-        <div class="message-card flex items-center gap-4">
-          <img src="assets/imgs/buyer1.jpg" class="w-12 h-12 rounded-full object-cover border border-green-200" alt="Buyer">
-          <div>
-            <p class="font-semibold">ABC Trader</p>
-            <p class="text-sm text-gray-500">Interested in your wheat...</p>
-            <span class="text-xs text-green-600">2 min ago</span>
+    <div class="px-4 md:px-6 py-5">
+      <div class="page-title-wrapper">
+        <h2 class="page-heading">💬 Secure Messaging Hub</h2>
+      </div>
+
+      <!-- Two-column chat layout -->
+      <div class="max-w-7xl mx-auto bg-white rounded-3xl shadow-lg border border-green-100 overflow-hidden">
+        <div class="flex flex-col md:flex-row">
+          <!-- Conversation List Sidebar -->
+          <div class="w-full md:w-96 bg-white border-r border-gray-100 flex flex-col">
+            <div class="p-4 border-b border-gray-100 flex justify-between items-center">
+              <h3 class="font-bold text-green-900 flex items-center gap-2"><ion-icon name="chatbubbles-outline"></ion-icon> Conversations</h3>
+              <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">4 unread</span>
+            </div>
+            <div class="flex-1 overflow-y-auto max-h-[70vh] divide-y divide-gray-50" id="conversationList">
+              <!-- dynamic conversations via JS, but we'll preload structure -->
+            </div>
           </div>
-        </div>
-        <div class="message-card flex items-center gap-4">
-          <img src="assets/imgs/buyer2.jpg" class="w-12 h-12 rounded-full object-cover border border-green-200" alt="Buyer">
-          <div>
-            <p class="font-semibold">FreshMart</p>
-            <p class="text-sm text-gray-500">Can you supply 50q tomato?</p>
-            <span class="text-xs text-green-600">1 hour ago</span>
-          </div>
-        </div>
-        <div class="message-card flex items-center gap-4">
-          <img src="assets/imgs/buyer3.jpg" class="w-12 h-12 rounded-full object-cover border border-green-200" alt="Buyer">
-          <div>
-            <p class="font-semibold">GreenGrocer</p>
-            <p class="text-sm text-gray-500">Price negotiation for potatoes...</p>
-            <span class="text-xs text-green-600">Yesterday</span>
+
+          <!-- Chat Panel (Right) -->
+          <div class="flex-1 flex flex-col bg-[#fefdf8] chat-panel" id="chatPanel">
+            <!-- Chat header -->
+            <div class="p-4 border-b border-gray-200 bg-white flex items-center gap-3 shadow-sm">
+              <button id="mobileBackBtn" class="md:hidden text-green-700 mr-2"><ion-icon name="arrow-back-outline" size="large"></ion-icon></button>
+              <div class="avatar-fallback w-10 h-10 text-sm" id="chatAvatar">AT</div>
+              <div>
+                <h4 class="font-bold text-gray-800" id="chatContactName">ABC Trader</h4>
+                <p class="text-xs text-green-600 flex items-center gap-1"><span class="w-2 h-2 bg-green-500 rounded-full inline-block"></span> Online · typically replies in 5min</p>
+              </div>
+            </div>
+
+            <!-- Messages area -->
+            <div class="flex-1 p-5 space-y-4 overflow-y-auto chat-messages bg-gradient-to-b from-[#fefcf5] to-[#faf9f2]" id="chatMessagesContainer">
+              <!-- messages injected via js -->
+              <div class="flex justify-center text-xs text-gray-400 my-2"><span class="bg-gray-100 px-3 py-1 rounded-full">Today</span></div>
+            </div>
+
+            <!-- Typing indicator (hidden by default) -->
+            <div id="typingIndicator" class="px-5 py-1 hidden">
+              <div class="typing-indicator flex gap-1 items-center"><span></span><span></span><span></span><span class="text-xs text-gray-500 ml-2">typing...</span></div>
+            </div>
+
+            <!-- Message input -->
+            <div class="p-4 bg-white border-t border-gray-200">
+              <div class="flex items-center gap-2">
+                <button class="text-green-600 p-2 rounded-full hover:bg-green-50"><ion-icon name="attach-outline" size="22"></ion-icon></button>
+                <input type="text" id="messageInput" placeholder="Type your message..." class="flex-1 border border-gray-200 rounded-full px-5 py-2.5 focus:outline-none focus:ring-2 focus:ring-green-300 bg-gray-50">
+                <button id="sendMsgBtn" class="bg-green-700 text-white p-2.5 rounded-full hover:bg-green-800 shadow-md transition"><ion-icon name="send-outline" size="22"></ion-icon></button>
+              </div>
+              <p class="text-[11px] text-gray-400 mt-2 text-center">🔒 End-to-end encrypted · Real-time delivery</p>
+            </div>
           </div>
         </div>
       </div>
@@ -95,5 +214,227 @@
 <script src="assets/js/main.js"></script>
 <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
 <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+<script>
+  // Mock conversation data (rich profile)
+  const conversations = [
+    { id: 1, name: "ABC Trader", role: "Buyer", lastMessage: "Interested in your premium wheat, let's finalize price.", time: "2 min ago", unread: 2, avatar: "AT", status: "online", messages: [
+      { text: "Hello! I'm looking for high-quality wheat (10q). Do you have organic stock?", sender: "them", time: "10:24 AM" },
+      { text: "Yes, we have Grade-A organic wheat available. Current bid price ₹2,280/q.", sender: "me", time: "10:28 AM" },
+      { text: "Interested in your premium wheat, let's finalize price. Can we negotiate for bulk?", sender: "them", time: "10:35 AM" },
+      { text: "Absolutely. For 15q+ I can offer ₹2,250/q. Let me know.", sender: "me", time: "10:42 AM" }
+    ] },
+    { id: 2, name: "FreshMart India", role: "Buyer", lastMessage: "Can you supply 50q tomato by Friday?", time: "1 hour ago", unread: 0, avatar: "FM", status: "offline", messages: [
+      { text: "We need 50q of fresh desi tomato for our retail chain. Best price?", sender: "them", time: "Yesterday 4:12 PM" },
+      { text: "Current rate ₹1,520/q. We can arrange delivery within 2 days.", sender: "me", time: "Yesterday 4:45 PM" },
+      { text: "Can you supply 50q tomato by Friday? Also need quality samples.", sender: "them", time: "1 hour ago" }
+    ] },
+    { id: 3, name: "GreenGrocer", role: "Buyer", lastMessage: "Price negotiation for potatoes, can we do ₹1,100/q?", time: "Yesterday", unread: 1, avatar: "GG", status: "online", messages: [
+      { text: "Interested in your potato harvest. What’s the best for 20q?", sender: "them", time: "Yesterday 9:15 AM" },
+      { text: "₹1,180/q is the current market rate. Organic certified.", sender: "me", time: "Yesterday 10:02 AM" },
+      { text: "Price negotiation for potatoes, can we do ₹1,100/q? We will pick up directly.", sender: "them", time: "Yesterday 11:30 AM" }
+    ] },
+    { id: 4, name: "Sunrise Exports", role: "Exporter", lastMessage: "Looking for long-term garlic contract", time: "3 days ago", unread: 0, avatar: "SE", status: "online", messages: [
+      { text: "We export to Middle East, need consistent garlic supply. Monthly 200q possible?", sender: "them", time: "3 days ago" },
+      { text: "Yes, we have garlic farms. Let's schedule a call.", sender: "me", time: "2 days ago" }
+    ] }
+  ];
+
+  let activeChatId = 1;  // default open ABC Trader
+  let currentUser = "me"; // logged-in farmer (or buyer depending on role, but demo as farmer)
+  
+  // Helper to render conversation list
+  function renderConversationList() {
+    const container = document.getElementById('conversationList');
+    if (!container) return;
+    container.innerHTML = conversations.map(conv => `
+      <div class="conversation-item p-4 flex items-center gap-3 cursor-pointer hover:bg-green-50 transition ${activeChatId === conv.id ? 'active bg-green-50' : ''}" data-id="${conv.id}">
+        <div class="relative">
+          <div class="avatar-fallback w-12 h-12 text-base">${conv.avatar}</div>
+          ${conv.status === 'online' ? '<span class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-green-500 border-2 border-white rounded-full"></span>' : ''}
+        </div>
+        <div class="flex-1 min-w-0">
+          <div class="flex justify-between items-baseline">
+            <p class="font-semibold text-gray-800">${conv.name}</p>
+            <span class="text-xs text-gray-400">${conv.time}</span>
+          </div>
+          <p class="text-sm text-gray-500 truncate">${conv.lastMessage}</p>
+        </div>
+        ${conv.unread > 0 ? `<span class="bg-green-600 text-white text-xs font-bold rounded-full px-2 py-0.5">${conv.unread}</span>` : ''}
+      </div>
+    `).join('');
+
+    // attach click events
+    document.querySelectorAll('.conversation-item').forEach(el => {
+      el.addEventListener('click', (e) => {
+        const id = parseInt(el.dataset.id);
+        if (!isNaN(id)) {
+          setActiveConversation(id);
+          if (window.innerWidth < 768) {
+            document.getElementById('chatPanel')?.classList.add('open');
+          }
+        }
+      });
+    });
+  }
+
+  // Render messages for active chat
+  function renderMessages() {
+    const conv = conversations.find(c => c.id === activeChatId);
+    if (!conv) return;
+    const container = document.getElementById('chatMessagesContainer');
+    if (!container) return;
+    // update header info
+    document.getElementById('chatContactName').innerText = conv.name;
+    document.getElementById('chatAvatar').innerText = conv.avatar;
+    const statusDot = conv.status === 'online' ? 'online' : 'offline';
+    document.querySelector('#chatPanel .text-xs') ? document.querySelector('#chatPanel .text-xs').innerHTML = `<span class="w-2 h-2 ${conv.status === 'online' ? 'bg-green-500' : 'bg-gray-400'} rounded-full inline-block mr-1"></span> ${conv.status === 'online' ? 'Online · active now' : 'Offline · last seen recently'}` : null;
+    
+    let lastDate = '';
+    const messagesHtml = conv.messages.map(msg => {
+      const msgDate = msg.time.split(' ')[0];
+      let dateSeparator = '';
+      if (lastDate !== msgDate && msg.time.includes(':')) {
+        dateSeparator = `<div class="flex justify-center text-xs text-gray-400 my-2"><span class="bg-gray-100 px-3 py-1 rounded-full">${msg.time.includes('Yesterday') ? 'Yesterday' : 'Today'}</span></div>`;
+        lastDate = msgDate;
+      } else if (!lastDate) { lastDate = msgDate; dateSeparator = `<div class="flex justify-center text-xs text-gray-400 my-2"><span class="bg-gray-100 px-3 py-1 rounded-full">${msg.time.includes('Yesterday') ? 'Yesterday' : 'Today'}</span></div>`; }
+      
+      const isMe = msg.sender === 'me';
+      return `
+        ${dateSeparator}
+        <div class="flex ${isMe ? 'justify-end' : 'justify-start'}">
+          <div class="message-bubble ${isMe ? 'message-out' : 'message-in'} shadow-sm">
+            <p class="text-sm">${msg.text}</p>
+            <p class="text-[10px] ${isMe ? 'text-green-100' : 'text-gray-400'} mt-1 text-right">${msg.time.split(' ').pop()}</p>
+          </div>
+        </div>
+      `;
+    }).join('');
+    
+    container.innerHTML = messagesHtml;
+    // auto-scroll to bottom
+    setTimeout(() => {
+      container.scrollTop = container.scrollHeight;
+    }, 50);
+  }
+
+  function setActiveConversation(id) {
+    activeChatId = id;
+    // mark unread as 0 for this conversation
+    const convIndex = conversations.findIndex(c => c.id === id);
+    if (convIndex !== -1 && conversations[convIndex].unread > 0) {
+      conversations[convIndex].unread = 0;
+    }
+    renderConversationList();
+    renderMessages();
+  }
+
+  // Send new message logic
+  function sendMessage() {
+    const input = document.getElementById('messageInput');
+    const text = input.value.trim();
+    if (text === "") return;
+    
+    const conv = conversations.find(c => c.id === activeChatId);
+    if (!conv) return;
+    
+    // Add new message to current conversation
+    const now = new Date();
+    const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    conv.messages.push({
+      text: text,
+      sender: 'me',
+      time: timeStr
+    });
+    // update last message preview
+    conv.lastMessage = text;
+    conv.time = "Just now";
+    
+    // Render updated messages & list
+    renderMessages();
+    renderConversationList();
+    input.value = '';
+    
+    // Simulate typing indicator & reply after 1.5 sec (only if buyer side response mock)
+    const typingDiv = document.getElementById('typingIndicator');
+    typingDiv.classList.remove('hidden');
+    setTimeout(() => {
+      typingDiv.classList.add('hidden');
+      // Auto reply (mock response from contact)
+      const autoReply = { text: "Thanks for your message! I'll check and get back shortly. 📦", sender: "them", time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) };
+      conv.messages.push(autoReply);
+      conv.lastMessage = autoReply.text;
+      conv.time = "Just now";
+      renderMessages();
+      renderConversationList();
+    }, 1800);
+  }
+
+  // Initial data + event binding
+  document.addEventListener('DOMContentLoaded', () => {
+    renderConversationList();
+    setActiveConversation(1);
+    
+    const sendBtn = document.getElementById('sendMsgBtn');
+    const msgInput = document.getElementById('messageInput');
+    if (sendBtn) sendBtn.addEventListener('click', sendMessage);
+    if (msgInput) msgInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(); });
+    
+    // Mobile back button
+    const backBtn = document.getElementById('mobileBackBtn');
+    const chatPanel = document.getElementById('chatPanel');
+    if (backBtn && chatPanel) {
+      backBtn.addEventListener('click', () => {
+        chatPanel.classList.remove('open');
+      });
+    }
+    
+    // search filter for conversations
+    const searchInput = document.querySelector('.search input');
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => {
+        const term = e.target.value.toLowerCase();
+        const filtered = conversations.filter(c => c.name.toLowerCase().includes(term) || c.lastMessage.toLowerCase().includes(term));
+        const container = document.getElementById('conversationList');
+        if (container) {
+          container.innerHTML = filtered.map(conv => `
+            <div class="conversation-item p-4 flex items-center gap-3 cursor-pointer hover:bg-green-50 transition ${activeChatId === conv.id ? 'active bg-green-50' : ''}" data-id="${conv.id}">
+              <div class="avatar-fallback w-12 h-12 text-base">${conv.avatar}</div>
+              <div class="flex-1">
+                <div class="flex justify-between"><p class="font-semibold">${conv.name}</p><span class="text-xs text-gray-400">${conv.time}</span></div>
+                <p class="text-sm text-gray-500 truncate">${conv.lastMessage}</p>
+              </div>
+              ${conv.unread > 0 ? `<span class="bg-green-600 text-white text-xs rounded-full px-2">${conv.unread}</span>` : ''}
+            </div>
+          `).join('');
+          document.querySelectorAll('.conversation-item').forEach(el => {
+            el.addEventListener('click', () => setActiveConversation(parseInt(el.dataset.id)));
+          });
+        }
+      });
+    }
+  });
+  
+  // Toggle sidebar (main.js already exists but ensure no conflict)
+  const toggleBtn = document.querySelector('.toggle');
+  const navigation = document.querySelector('.navigation');
+  if (toggleBtn && navigation) {
+    toggleBtn.addEventListener('click', () => navigation.classList.toggle('active'));
+  }
+</script>
+
+<style>
+  /* additional smoothness */
+  .conversation-item.active {
+    background: #ecfdf3;
+    border-left: 4px solid #15803d;
+  }
+  .chat-messages {
+    scroll-behavior: smooth;
+  }
+  .navigation ul li a {
+    transition: 0.2s;
+  }
+</style>
 </body>
 </html>
