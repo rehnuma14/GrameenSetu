@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Grameen Setu – Ratings & Trust</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Grameen Setu – Trust & Ratings</title>
   <link rel="stylesheet" href="assets/css/style.css">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
@@ -11,22 +11,23 @@
     .main h2 {
       text-align: center; font-weight: 800; color: #14532d;
       background: linear-gradient(145deg, #f0fdf4 0%, #dcfce7 100%);
-      padding: 0.9rem 2rem; border-radius: 60px; display: inline-block; margin: auto;
+      padding: 0.7rem 2rem; border-radius: 60px; display: inline-block; margin: auto;
       width: fit-content; box-shadow: 0 6px 12px -6px rgba(0, 40, 0, 0.08);
-      border: 1px solid #bbf7d0; font-size: 2rem;
+      border: 1px solid #bbf7d0; font-size: 1.8rem;
     }
-    .page-title-wrapper { display: flex; justify-content: center; margin-bottom: 1.8rem; }
+    .page-title-wrapper { display: flex; justify-content: center; margin-bottom: 1.5rem; }
     .navigation ul li.hovered { background: #e6f7e6; border-left: 6px solid #166534; }
+    .main { background: #fafdfa; }
     .criteria-star-btn {
       background: none; border: none; font-size: 28px; cursor: pointer; color: #d1d5db;
       transition: all 0.15s; padding: 0 2px; line-height: 1;
     }
     .criteria-star-btn:hover, .criteria-star-btn.active { color: #fbbf24; transform: scale(1.12); }
-    .criteria-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+    .criteria-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; flex-wrap: wrap; gap: 8px; }
     .criteria-label { width: 145px; font-weight: 600; color: #1e293b; font-size: 0.95rem; }
     .review-card {
-      background: white; border-radius: 18px; box-shadow: 0 6px 14px rgba(0, 0, 0, 0.03);
-      padding: 20px 22px; border: 1px solid #e9f5e9; transition: box-shadow 0.2s;
+      background: white; border-radius: 20px; box-shadow: 0 6px 14px rgba(0, 0, 0, 0.03);
+      padding: 18px 22px; border: 1px solid #e9f5e9; transition: box-shadow 0.2s;
     }
     .review-card:hover { box-shadow: 0 10px 20px -8px rgba(0,80,0,0.08); }
     .badge { display: inline-block; font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 40px; }
@@ -41,13 +42,13 @@
       box-shadow: 0 30px 40px -15px rgba(0,20,0,0.2);
     }
     .tab-active { color: #15803d !important; border-bottom: 4px solid #15803d !important; font-weight: 700; background: #f0fdf4; }
-    .filter-tab { transition: all 0.15s; }
-    .main { background: #fafdfa; }
+    .filter-tab { transition: all 0.15s; cursor: pointer; padding: 0.75rem 1.5rem; }
     .edit-given-btn {
       background: #f3f4f6; padding: 6px 14px; border-radius: 40px; font-size: 0.75rem;
       font-weight: 600; color: #1f2937; transition: all 0.15s;
     }
     .edit-given-btn:hover { background: #e5e7eb; }
+    .tag-btn.active-tag { background: #dcfce7; border-color: #22c55e; color: #166534; }
   </style>
 </head>
 <body class="page-transition">
@@ -55,7 +56,7 @@
 <header class="top-nav">
   <div class="brand text-center" style="margin:0 auto;">
     <div style="font-size:30px;">🌾 Grameen Setu</div>
-    <div style="color:#d1fae5; font-size:13px;">Farm to Business</div>
+    <div style="color:#d1fae5; font-size:13px;">Farm to Business · Trust Network</div>
   </div>
 </header>
 
@@ -77,7 +78,7 @@
   <div class="main">
     <div class="topbar">
       <div class="toggle"><ion-icon name="menu-outline"></ion-icon></div>
-      <div class="search"><label><input type="text" placeholder="Search ratings..."><ion-icon name="search-outline"></ion-icon></label></div>
+      <div class="search"><label><input type="text" id="searchRatings" placeholder="Search by name..."><ion-icon name="search-outline"></ion-icon></label></div>
     </div>
 
     <div class="px-5 py-6 space-y-6">
@@ -94,23 +95,23 @@
       </div>
 
       <!-- Tabs -->
-      <div class="flex border-b border-gray-200 gap-1">
-        <button class="filter-tab py-3 px-6 text-base tab-active" id="tab-received" onclick="switchRatingTab('received')">📋 Received</button>
-        <button class="filter-tab py-3 px-6 text-base text-gray-600" id="tab-given" onclick="switchRatingTab('given')">📤 Given</button>
-        <button class="filter-tab py-3 px-6 text-base text-gray-600" id="tab-rate" onclick="switchRatingTab('rate')">✏️ Rate / Edit</button>
+      <div class="flex border-b border-gray-200 gap-1 flex-wrap">
+        <button class="filter-tab tab-active" data-tab="received">📋 Received (Reviews about you)</button>
+        <button class="filter-tab text-gray-600" data-tab="given">📤 Given (Your reviews)</button>
+        <button class="filter-tab text-gray-600" data-tab="rate">✏️ Rate / Edit</button>
       </div>
 
-      <!-- Received -->
+      <!-- Received Panel -->
       <div id="panel-received" class="space-y-4">
-        <div id="receivedList" class="space-y-3"><p class="text-gray-400 text-center py-10">Loading reviews...</p></div>
+        <div id="receivedList" class="space-y-3"></div>
       </div>
 
-      <!-- Given -->
+      <!-- Given Panel -->
       <div id="panel-given" class="space-y-4 hidden">
-        <div id="givenList" class="space-y-3"><p class="text-gray-400 text-center py-10">You haven't reviewed anyone yet.</p></div>
+        <div id="givenList" class="space-y-3"></div>
       </div>
 
-      <!-- Rate / Edit -->
+      <!-- Rate/Edit Panel -->
       <div id="panel-rate" class="hidden">
         <div class="bg-white rounded-2xl shadow-lg p-7 max-w-3xl mx-auto border border-green-100">
           <h3 class="font-bold text-xl text-gray-800 mb-1 flex items-center gap-2"><span class="text-2xl">🌟</span> Rate a farmer or buyer</h3>
@@ -150,8 +151,8 @@
 
           <div id="rateError" class="text-red-500 text-sm mb-3"></div>
           <div class="flex gap-4 items-center">
-            <button id="submitRatingBtn" onclick="submitOrUpdateRating()" class="bg-green-700 hover:bg-green-800 text-white font-bold px-8 py-3 rounded-xl transition shadow">Submit Review</button>
-            <button id="cancelEditBtn" onclick="resetRateForm()" class="text-gray-500 hover:text-gray-800 px-4 py-2 text-sm hidden">Cancel edit</button>
+            <button id="submitRatingBtn" class="bg-green-700 hover:bg-green-800 text-white font-bold px-8 py-3 rounded-xl transition shadow">Submit Review</button>
+            <button id="cancelEditBtn" class="text-gray-500 hover:text-gray-800 px-4 py-2 text-sm hidden">Cancel edit</button>
           </div>
           <p class="text-xs text-gray-400 mt-4">✨ You can edit your existing rating by selecting the same person.</p>
         </div>
@@ -175,43 +176,80 @@
 <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 
 <script>
-  (function(){
+  (function() {
+    // ----- DUMMY DATA (matches previous pages: farmers & buyers) -----
+    const USERS_KEY = 'grameen_users';
     const RATINGS_KEY = 'grameen_ratings_v2';
-    const currentUser = JSON.parse(localStorage.getItem('logged_user') || 'null');
-    function migrateAndSeed() {
-      let ratings = JSON.parse(localStorage.getItem('grameen_ratings') || '[]');
-      if (ratings.length && ratings[0].quality === undefined) {
-        ratings = ratings.map(r => ({ ...r, quality: r.stars || 3, assurance: r.stars || 3, time: r.stars || 3, trust: r.stars || 3, overall: r.stars || 3 }));
-        localStorage.setItem(RATINGS_KEY, JSON.stringify(ratings));
-      } else {
-        let v2 = JSON.parse(localStorage.getItem(RATINGS_KEY) || '[]');
-        if (!v2.length) {
-          const demo = [
-            { id: 101, fromEmail: 'buyer@test.com', fromName: 'Priya Sharma', fromRole: 'buyer', toEmail: 'farmer@test.com', toName: 'Raju Kumar', toRole: 'farmer', quality:5, assurance:4, time:5, trust:5, overall:4.8, comment:'Fresh produce, packed well. Highly recommended!', tags:['Good quality','Reliable','Honest'], date:'15 Mar 2026' },
-            { id: 102, fromEmail: 'farmer@test.com', fromName: 'Raju Kumar', fromRole: 'farmer', toEmail: 'buyer@test.com', toName: 'Priya Sharma', toRole: 'buyer', quality:4, assurance:5, time:4, trust:5, overall:4.5, comment:'Prompt payment, clear communication.', tags:['Responsive','Fair price'], date:'10 Mar 2026' }
-          ];
-          localStorage.setItem(RATINGS_KEY, JSON.stringify(demo));
-        }
-      }
+    
+    // All users (farmers + buyers) that appear in other pages
+    const ALL_USERS = [
+      { email: 'raju.farmer@grameensetu.com', name: 'Raju Kumar', role: 'farmer' },
+      { email: 'ramesh.patel@example.com', name: 'Ramesh Patel', role: 'farmer' },
+      { email: 'sunita.devi@example.com', name: 'Sunita Devi', role: 'farmer' },
+      { email: 'gurpreet.singh@example.com', name: 'Gurpreet Singh', role: 'farmer' },
+      { email: 'abc.trader@example.com', name: 'ABC Trader', role: 'buyer' },
+      { email: 'freshmart@example.com', name: 'FreshMart', role: 'buyer' },
+      { email: 'greengrocer@example.com', name: 'GreenGrocer', role: 'buyer' },
+      { email: 'sunrise.exports@example.com', name: 'Sunrise Exports', role: 'buyer' },
+      { email: 'metrofresh@example.com', name: 'Metro Fresh', role: 'buyer' }
+    ];
+
+    // Dummy ratings: Received by Raju Kumar (current user) and given by Raju Kumar
+    const INITIAL_RATINGS = [
+      // RECEIVED reviews (from buyers & farmers to Raju)
+      { id: 101, fromEmail: 'abc.trader@example.com', fromName: 'ABC Trader', fromRole: 'buyer', toEmail: 'raju.farmer@grameensetu.com', toName: 'Raju Kumar', toRole: 'farmer', quality:5, assurance:4, time:5, trust:5, overall:4.8, comment:'Excellent wheat quality, on-time delivery. Will buy again.', tags:['Good quality','Fast delivery','Honest'], date:'15 Mar 2026' },
+      { id: 102, fromEmail: 'freshmart@example.com', fromName: 'FreshMart', fromRole: 'buyer', toEmail: 'raju.farmer@grameensetu.com', toName: 'Raju Kumar', toRole: 'farmer', quality:4, assurance:5, time:4, trust:5, overall:4.5, comment:'Consistent supply and fair pricing. Recommended!', tags:['Reliable','Fair price'], date:'10 Mar 2026' },
+      { id: 103, fromEmail: 'greengrocer@example.com', fromName: 'GreenGrocer', fromRole: 'buyer', toEmail: 'raju.farmer@grameensetu.com', toName: 'Raju Kumar', toRole: 'farmer', quality:5, assurance:5, time:5, trust:5, overall:5.0, comment:'Top-notch organic produce! Will definitely partner again.', tags:['Good quality','Honest','Responsive'], date:'5 Mar 2026' },
+      { id: 104, fromEmail: 'ramesh.patel@example.com', fromName: 'Ramesh Patel', fromRole: 'farmer', toEmail: 'raju.farmer@grameensetu.com', toName: 'Raju Kumar', toRole: 'farmer', quality:5, assurance:4, time:4, trust:5, overall:4.5, comment:'Cooperative and trustworthy fellow farmer.', tags:['Reliable','Honest'], date:'20 Feb 2026' },
+      { id: 105, fromEmail: 'sunrise.exports@example.com', fromName: 'Sunrise Exports', fromRole: 'buyer', toEmail: 'raju.farmer@grameensetu.com', toName: 'Raju Kumar', toRole: 'farmer', quality:5, assurance:5, time:4, trust:5, overall:4.8, comment:'Great for bulk garlic orders. Professional.', tags:['Good quality','Fast delivery'], date:'25 Feb 2026' },
+      { id: 106, fromEmail: 'metrofresh@example.com', fromName: 'Metro Fresh', fromRole: 'buyer', toEmail: 'raju.farmer@grameensetu.com', toName: 'Raju Kumar', toRole: 'farmer', quality:4, assurance:4, time:5, trust:4, overall:4.3, comment:'Good experience, will order more.', tags:['Responsive','Fair price'], date:'1 Mar 2026' },
+      
+      // GIVEN reviews (from Raju to others)
+      { id: 107, fromEmail: 'raju.farmer@grameensetu.com', fromName: 'Raju Kumar', fromRole: 'farmer', toEmail: 'ramesh.patel@example.com', toName: 'Ramesh Patel', toRole: 'farmer', quality:4, assurance:4, time:3, trust:5, overall:4.0, comment:'Good farming practices, reliable partner.', tags:['Reliable','Fair price'], date:'12 Mar 2026' },
+      { id: 108, fromEmail: 'raju.farmer@grameensetu.com', fromName: 'Raju Kumar', fromRole: 'farmer', toEmail: 'sunita.devi@example.com', toName: 'Sunita Devi', toRole: 'farmer', quality:5, assurance:5, time:4, trust:5, overall:4.8, comment:'Excellent tomato quality! Very satisfied.', tags:['Good quality','Honest'], date:'8 Mar 2026' },
+      { id: 109, fromEmail: 'raju.farmer@grameensetu.com', fromName: 'Raju Kumar', fromRole: 'farmer', toEmail: 'abc.trader@example.com', toName: 'ABC Trader', toRole: 'buyer', quality:5, assurance:5, time:5, trust:5, overall:5.0, comment:'Great buyer, prompt payments and clear communication.', tags:['Responsive','Fair price'], date:'1 Mar 2026' },
+      { id: 110, fromEmail: 'raju.farmer@grameensetu.com', fromName: 'Raju Kumar', fromRole: 'farmer', toEmail: 'greengrocer@example.com', toName: 'GreenGrocer', toRole: 'buyer', quality:4, assurance:5, time:4, trust:5, overall:4.5, comment:'Consistent buyer, fair negotiations.', tags:['Reliable','Honest'], date:'28 Feb 2026' }
+    ];
+
+    // Initialize localStorage with users and ratings if empty
+    if (!localStorage.getItem(USERS_KEY)) {
+      localStorage.setItem(USERS_KEY, JSON.stringify(ALL_USERS));
     }
-    migrateAndSeed();
+    if (!localStorage.getItem(RATINGS_KEY)) {
+      localStorage.setItem(RATINGS_KEY, JSON.stringify(INITIAL_RATINGS));
+    }
+    
+    // Set current user (logged-in farmer Raju Kumar)
+    let currentUser = JSON.parse(localStorage.getItem('logged_user'));
+    if (!currentUser || currentUser.email !== 'raju.farmer@grameensetu.com') {
+      currentUser = { email: 'raju.farmer@grameensetu.com', name: 'Raju Kumar', role: 'farmer' };
+      localStorage.setItem('logged_user', JSON.stringify(currentUser));
+    }
+
+    function getUsers() { return JSON.parse(localStorage.getItem(USERS_KEY) || '[]'); }
+    function getRatings() { return JSON.parse(localStorage.getItem(RATINGS_KEY) || '[]'); }
+    function saveRatings(ratings) { localStorage.setItem(RATINGS_KEY, JSON.stringify(ratings)); }
+
     let editingRatingId = null;
     let criteriaValues = { quality:0, assurance:0, time:0, trust:0 };
     let selectedTags = [];
-    function getRatings() { return JSON.parse(localStorage.getItem(RATINGS_KEY) || '[]'); }
-    function saveRatings(ratings) { localStorage.setItem(RATINGS_KEY, JSON.stringify(ratings)); }
+
     function starsHtml(n) { return '★'.repeat(Math.round(n)) + '☆'.repeat(5-Math.round(n)); }
+
     function updateStarGroup(criterion, value) {
       const group = document.querySelector(`.star-group[data-criterion="${criterion}"]`);
       if(!group) return;
       group.querySelectorAll('.criteria-star-btn').forEach(btn => btn.classList.toggle('active', parseInt(btn.dataset.val) <= value));
       document.getElementById(criterion+'Val').innerText = value || '-';
     }
+
     function updateOverallPreview() {
       const vals = Object.values(criteriaValues);
       const avg = vals.reduce((a,b)=>a+b,0)/4;
-      document.getElementById('overallPreview').innerText = avg.toFixed(1) + ' ★';
+      document.getElementById('overallPreview').innerText = avg ? avg.toFixed(1) + ' ★' : '—';
     }
+
+    // Attach star listeners
     document.querySelectorAll('.star-group').forEach(group => {
       const criterion = group.dataset.criterion;
       group.querySelectorAll('.criteria-star-btn').forEach(btn => {
@@ -223,62 +261,47 @@
         });
       });
     });
+
+    function updateTagUI() {
+      document.querySelectorAll('.tag-btn').forEach(btn => {
+        const tag = btn.dataset.tag;
+        if (selectedTags.includes(tag)) btn.classList.add('bg-green-100', 'border-green-500', 'text-green-800');
+        else btn.classList.remove('bg-green-100', 'border-green-500', 'text-green-800');
+      });
+    }
     document.querySelectorAll('.tag-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         const tag = btn.dataset.tag;
-        if (selectedTags.includes(tag)) selectedTags = selectedTags.filter(t => t!==tag);
+        if (selectedTags.includes(tag)) selectedTags = selectedTags.filter(t => t !== tag);
         else selectedTags.push(tag);
         updateTagUI();
       });
     });
-    function updateTagUI() {
-      document.querySelectorAll('.tag-btn').forEach(btn => {
-        const tag = btn.dataset.tag;
-        if (selectedTags.includes(tag)) btn.classList.add('bg-green-100','border-green-500','text-green-800');
-        else btn.classList.remove('bg-green-100','border-green-500','text-green-800');
-      });
-    }
+
     function populateUserSelect() {
       const select = document.getElementById('rateUserSelect');
-      select.innerHTML = '<option value="">— choose a user —</option>';
-      const users = JSON.parse(localStorage.getItem('grameen_users') || '[]');
+      const users = getUsers();
       const ratings = getRatings();
+      select.innerHTML = '<option value="">— choose a user —</option>';
       users.forEach(u => {
-        if (!currentUser || u.email === currentUser.email) return;
+        if (u.email === currentUser.email) return;
         const existing = ratings.find(r => r.fromEmail === currentUser.email && r.toEmail === u.email);
         const opt = document.createElement('option');
         opt.value = u.email;
         opt.textContent = `${u.name} (${u.role})${existing ? ' ✓ rated' : ''}`;
         select.appendChild(opt);
       });
-      select.addEventListener('change', (e) => {
-        const email = e.target.value;
-        if (!email) { resetRateForm(); return; }
-        const existing = getRatings().find(r => r.fromEmail === currentUser.email && r.toEmail === email);
-        if (existing) {
-          editingRatingId = existing.id;
-          loadCriteriaIntoForm(existing);
-          document.getElementById('rateComment').value = existing.comment || '';
-          selectedTags = [...(existing.tags||[])];
-          updateTagUI();
-          document.getElementById('editHint').innerText = `✏️ Editing review for ${existing.toName}`;
-          document.getElementById('cancelEditBtn').classList.remove('hidden');
-          document.getElementById('submitRatingBtn').innerText = 'Update Review';
-        } else {
-          resetRateForm();
-          editingRatingId = null;
-          document.getElementById('editHint').innerText = '';
-        }
-      });
     }
-    function loadCriteriaIntoForm(r) {
-      criteriaValues = { quality: r.quality||3, assurance: r.assurance||3, time: r.time||3, trust: r.trust||3 };
+
+    function loadCriteriaIntoForm(rating) {
+      criteriaValues = { quality: rating.quality || 3, assurance: rating.assurance || 3, time: rating.time || 3, trust: rating.trust || 3 };
       ['quality','assurance','time','trust'].forEach(c => updateStarGroup(c, criteriaValues[c]));
       updateOverallPreview();
     }
+
     window.resetRateForm = function() {
       criteriaValues = { quality:0, assurance:0, time:0, trust:0 };
-      ['quality','assurance','time','trust'].forEach(c => updateStarGroup(c,0));
+      ['quality','assurance','time','trust'].forEach(c => updateStarGroup(c, 0));
       document.getElementById('rateComment').value = '';
       selectedTags = [];
       updateTagUI();
@@ -289,29 +312,30 @@
       document.getElementById('editHint').innerText = '';
       updateOverallPreview();
     };
+
     window.submitOrUpdateRating = function() {
       const toEmail = document.getElementById('rateUserSelect').value;
       const comment = document.getElementById('rateComment').value.trim();
       const errEl = document.getElementById('rateError');
       errEl.textContent = '';
       if (!toEmail) { errEl.textContent = 'Select a person.'; return; }
-      if (Object.values(criteriaValues).some(v => v===0)) { errEl.textContent = 'Rate all four criteria.'; return; }
-      const users = JSON.parse(localStorage.getItem('grameen_users')||'[]');
+      if (Object.values(criteriaValues).some(v => v === 0)) { errEl.textContent = 'Rate all four criteria.'; return; }
+      const users = getUsers();
       const toUser = users.find(u => u.email === toEmail);
       if (!toUser) return;
-      const overall = (criteriaValues.quality + criteriaValues.assurance + criteriaValues.time + criteriaValues.trust)/4;
+      const overall = (criteriaValues.quality + criteriaValues.assurance + criteriaValues.time + criteriaValues.trust) / 4;
       const ratingData = {
         fromEmail: currentUser.email, fromName: currentUser.name, fromRole: currentUser.role,
         toEmail: toUser.email, toName: toUser.name, toRole: toUser.role,
         quality: criteriaValues.quality, assurance: criteriaValues.assurance, time: criteriaValues.time, trust: criteriaValues.trust,
-        overall: Math.round(overall*10)/10,
+        overall: Math.round(overall * 10) / 10,
         comment, tags: [...selectedTags],
         date: new Date().toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' })
       };
       let ratings = getRatings();
       if (editingRatingId) {
         const idx = ratings.findIndex(r => r.id === editingRatingId);
-        if (idx>-1) { ratingData.id = editingRatingId; ratings[idx] = ratingData; }
+        if (idx > -1) { ratingData.id = editingRatingId; ratings[idx] = ratingData; }
       } else {
         ratingData.id = Date.now();
         ratings.push(ratingData);
@@ -323,6 +347,22 @@
       renderAllPanels();
       populateUserSelect();
     };
+
+    window.editRatingById = function(id) {
+      const rating = getRatings().find(r => r.id === id);
+      if (!rating) return;
+      editingRatingId = id;
+      document.getElementById('rateUserSelect').value = rating.toEmail;
+      loadCriteriaIntoForm(rating);
+      document.getElementById('rateComment').value = rating.comment || '';
+      selectedTags = [...(rating.tags || [])];
+      updateTagUI();
+      document.getElementById('editHint').innerText = `✏️ Editing review for ${rating.toName}`;
+      document.getElementById('cancelEditBtn').classList.remove('hidden');
+      document.getElementById('submitRatingBtn').innerText = 'Update Review';
+      switchRatingTab('rate');
+    };
+
     function renderSummary() {
       const ratings = getRatings();
       const mine = ratings.filter(r => currentUser && r.toEmail === currentUser.email);
@@ -333,69 +373,86 @@
       if (!mine.length) {
         avgEl.textContent = '–'; starsEl.textContent = '☆☆☆☆☆'; totalEl.textContent = 'No reviews yet'; barsEl.innerHTML = ''; return;
       }
-      const avg = mine.reduce((s,r) => s + (r.overall||3), 0) / mine.length;
+      const avg = mine.reduce((s,r) => s + (r.overall || 3), 0) / mine.length;
       avgEl.textContent = avg.toFixed(1);
       starsEl.textContent = starsHtml(avg);
       totalEl.textContent = `${mine.length} review${mine.length>1?'s':''}`;
       barsEl.innerHTML = [5,4,3,2,1].map(n => {
-        const count = mine.filter(r => Math.round(r.overall||3) === n).length;
+        const count = mine.filter(r => Math.round(r.overall || 3) === n).length;
         const pct = Math.round((count/mine.length)*100);
         return `<div class="flex items-center gap-2 text-xs"><span class="text-amber-500 w-6">${n}★</span><div class="flex-1 bg-gray-100 rounded-full h-2"><div class="bg-amber-400 h-2 rounded-full" style="width:${pct}%"></div></div><span class="text-gray-400 w-6">${count}</span></div>`;
       }).join('');
     }
+
     function renderReceived() {
       const list = document.getElementById('receivedList');
-      const ratings = getRatings().filter(r => currentUser && r.toEmail === currentUser.email);
+      let ratings = getRatings().filter(r => currentUser && r.toEmail === currentUser.email);
+      const searchTerm = document.getElementById('searchRatings')?.value.toLowerCase() || '';
+      if (searchTerm) {
+        ratings = ratings.filter(r => r.fromName.toLowerCase().includes(searchTerm) || (r.comment && r.comment.toLowerCase().includes(searchTerm)));
+      }
       if (!ratings.length) { list.innerHTML = '<p class="text-gray-400 text-center py-10">No reviews received yet.</p>'; return; }
       list.innerHTML = ratings.map(r => `
         <div class="review-card">
-          <div class="flex items-center justify-between">
+          <div class="flex items-center justify-between flex-wrap gap-2">
             <div class="flex items-center gap-3"><div class="w-11 h-11 rounded-full bg-green-100 flex items-center justify-center text-green-800 font-bold text-lg">${r.fromName.charAt(0)}</div><div><p class="font-bold">${r.fromName}</p><span class="badge badge-${r.fromRole}">${r.fromRole}</span></div></div>
             <div class="text-right"><span class="text-xl text-amber-500">${starsHtml(r.overall||3)}</span><p class="text-xs text-gray-400">${r.date}</p></div>
           </div>
           <div class="grid grid-cols-4 gap-2 mt-3 text-sm bg-gray-50 p-2 rounded-lg"><span>🌱 ${r.quality||'-'}</span><span>🛡️ ${r.assurance||'-'}</span><span>⏱️ ${r.time||'-'}</span><span>🤝 ${r.trust||'-'}</span></div>
-          ${r.comment?`<p class="text-sm text-gray-600 mt-3 italic">“${r.comment}”</p>`:''}
-          ${r.tags?.length? `<div class="flex flex-wrap gap-1 mt-3">${r.tags.map(t=>`<span class="text-xs bg-green-50 border border-green-200 px-3 py-1 rounded-full">${t}</span>`).join('')}</div>`:''}
+          ${r.comment ? `<p class="text-sm text-gray-600 mt-3 italic">“${r.comment}”</p>` : ''}
+          ${r.tags?.length ? `<div class="flex flex-wrap gap-1 mt-3">${r.tags.map(t=>`<span class="text-xs bg-green-50 border border-green-200 px-3 py-1 rounded-full">${t}</span>`).join('')}</div>` : ''}
         </div>`).join('');
     }
+
     function renderGiven() {
       const list = document.getElementById('givenList');
-      const ratings = getRatings().filter(r => currentUser && r.fromEmail === currentUser.email);
-      if (!ratings.length) { list.innerHTML = '<p class="text-gray-400 text-center py-10">You haven\'t reviewed anyone.</p>'; return; }
+      let ratings = getRatings().filter(r => currentUser && r.fromEmail === currentUser.email);
+      const searchTerm = document.getElementById('searchRatings')?.value.toLowerCase() || '';
+      if (searchTerm) {
+        ratings = ratings.filter(r => r.toName.toLowerCase().includes(searchTerm) || (r.comment && r.comment.toLowerCase().includes(searchTerm)));
+      }
+      if (!ratings.length) { list.innerHTML = '<p class="text-gray-400 text-center py-10">You haven\'t reviewed anyone yet.</p>'; return; }
       list.innerHTML = ratings.map(r => `
         <div class="review-card flex flex-wrap items-start justify-between gap-2">
           <div class="flex items-center gap-3"><div class="w-11 h-11 rounded-full bg-blue-100 flex items-center justify-center text-blue-800 font-bold">${r.toName.charAt(0)}</div><div><p class="font-bold">${r.toName}</p><span class="badge badge-${r.toRole}">${r.toRole}</span></div></div>
           <div class="flex items-center gap-4"><span class="text-xl text-amber-500">${starsHtml(r.overall||3)}</span><button class="edit-given-btn" onclick="editRatingById(${r.id})">✎ Edit</button></div>
           <div class="w-full grid grid-cols-4 gap-1 text-xs bg-gray-50 p-2 rounded mt-2">🌱${r.quality} 🛡️${r.assurance} ⏱️${r.time} 🤝${r.trust}</div>
-          ${r.comment?`<p class="text-sm text-gray-600 w-full italic mt-1">“${r.comment}”</p>`:''}
+          ${r.comment ? `<p class="text-sm text-gray-600 w-full italic mt-1">“${r.comment}”</p>` : ''}
+          ${r.tags?.length ? `<div class="flex flex-wrap gap-1 w-full">${r.tags.map(t=>`<span class="text-xs bg-green-50 border border-green-200 px-2 py-0.5 rounded-full">${t}</span>`).join('')}</div>` : ''}
         </div>`).join('');
     }
-    window.editRatingById = function(id) {
-      const rating = getRatings().find(r => r.id === id);
-      if (!rating) return;
-      editingRatingId = id;
-      document.getElementById('rateUserSelect').value = rating.toEmail;
-      loadCriteriaIntoForm(rating);
-      document.getElementById('rateComment').value = rating.comment || '';
-      selectedTags = [...(rating.tags||[])];
-      updateTagUI();
-      document.getElementById('editHint').innerText = `✏️ Editing review for ${rating.toName}`;
-      document.getElementById('cancelEditBtn').classList.remove('hidden');
-      document.getElementById('submitRatingBtn').innerText = 'Update Review';
-      switchRatingTab('rate');
-    };
-    window.switchRatingTab = function(tab) {
-      ['received','given','rate'].forEach(t => {
-        document.getElementById('panel-'+t).classList.toggle('hidden', t!==tab);
-        const btn = document.getElementById('tab-'+t);
-        btn.classList.toggle('tab-active', t===tab);
-        btn.classList.toggle('text-gray-600', t!==tab);
+
+    function switchRatingTab(tab) {
+      document.getElementById('panel-received').classList.toggle('hidden', tab !== 'received');
+      document.getElementById('panel-given').classList.toggle('hidden', tab !== 'given');
+      document.getElementById('panel-rate').classList.toggle('hidden', tab !== 'rate');
+      document.querySelectorAll('.filter-tab').forEach(btn => {
+        btn.classList.toggle('tab-active', btn.dataset.tab === tab);
+        btn.classList.toggle('text-gray-600', btn.dataset.tab !== tab);
       });
-    };
-    function renderAllPanels() { renderSummary(); renderReceived(); renderGiven(); }
-    if (!currentUser) window.location.href = 'login.html';
-    renderAllPanels();
+    }
+
+    function renderAllPanels() {
+      renderSummary();
+      renderReceived();
+      renderGiven();
+    }
+
+    // Event listeners
+    document.querySelectorAll('.filter-tab').forEach(btn => {
+      btn.addEventListener('click', () => switchRatingTab(btn.dataset.tab));
+    });
+    document.getElementById('searchRatings')?.addEventListener('input', () => {
+      renderReceived();
+      renderGiven();
+    });
+    document.getElementById('cancelEditBtn').addEventListener('click', resetRateForm);
+    document.getElementById('submitRatingBtn').addEventListener('click', submitOrUpdateRating);
+
+    // Initial render
     populateUserSelect();
+    renderAllPanels();
+    switchRatingTab('received'); // show received tab first
   })();
 </script>
 </body>
