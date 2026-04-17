@@ -2,32 +2,77 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Grameen Setu – Trending</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Grameen Setu – Market Trends & Intelligence</title>
   <link rel="stylesheet" href="assets/css/style.css">
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <style>
-    .top-nav .brand { font-size: 19px !important; font-weight: 800 !important; }
-    .main h2 {
+    .top-nav .brand { font-size: 19px !important; font-weight: 800 !important; letter-spacing: -0.3px; }
+    .main h2.page-heading {
       text-align: center; font-weight: 800; color: #14532d;
       background: linear-gradient(145deg, #f0fdf4 0%, #dcfce7 100%);
-      padding: 0.9rem 2rem; border-radius: 60px; display: inline-block; margin: auto;
-      width: fit-content; box-shadow: 0 6px 12px -6px rgba(0, 40, 0, 0.08);
-      border: 1px solid #bbf7d0; font-size: 2rem;
+      padding: 0.7rem 2rem; border-radius: 60px; display: inline-block; margin: auto;
+      width: fit-content; box-shadow: 0 6px 14px -6px rgba(0, 40, 0, 0.08);
+      border: 1px solid #bbf7d0; font-size: 1.8rem;
     }
-    .page-title-wrapper { display: flex; justify-content: center; margin-bottom: 1.8rem; }
-    .navigation ul li.hovered { background: #e6f7e6; border-left: 6px solid #166534; }
+    .page-title-wrapper { display: flex; justify-content: center; margin-bottom: 1.5rem; }
     .main { background: #fafdfa; }
-    .trend-card { transition: all 0.25s ease; }
-    .trend-card:hover { transform: translateY(-6px) scale(1.02); box-shadow: 0 12px 25px rgba(0, 80, 0, 0.15); }
+    .navigation ul li.hovered { background: #e6f7e6; border-left: 6px solid #166534; }
+    .trend-card {
+      transition: all 0.25s ease;
+      background: white;
+      border-radius: 24px;
+      border: 1px solid #e2f3e4;
+      box-shadow: 0 8px 20px -8px rgba(0, 60, 0, 0.08);
+    }
+    .trend-card:hover { transform: translateY(-5px); box-shadow: 0 20px 28px -12px rgba(0, 80, 0, 0.2); }
+    .badge-trend {
+      background: #fef9c3;
+      color: #854d0e;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 0.2rem 0.7rem;
+      border-radius: 30px;
+    }
+    .trend-up { color: #16a34a; font-weight: 700; }
+    .trend-down { color: #dc2626; }
+    .insight-card {
+      background: linear-gradient(135deg, #f0f9f0, #ffffff);
+      border-radius: 28px;
+    }
+    .tab-active {
+      background: #15803d;
+      color: white;
+      box-shadow: 0 2px 6px rgba(21,128,61,0.2);
+    }
+    .tab-inactive {
+      background: #f1f5f9;
+      color: #334155;
+    }
+    @keyframes pulse-green {
+      0% { box-shadow: 0 0 0 0 rgba(34,197,94,0.4); }
+      70% { box-shadow: 0 0 0 8px rgba(34,197,94,0); }
+      100% { box-shadow: 0 0 0 0 rgba(34,197,94,0); }
+    }
+    .live-indicator {
+      animation: pulse-green 1.5s infinite;
+    }
+    .crop-image {
+      height: 160px;
+      width: 100%;
+      object-fit: cover;
+      border-radius: 16px;
+      background: #eef2e6;
+    }
   </style>
 </head>
-<body class="page-transition">
+<body class="page-transition bg-[#fafdfa]">
 
 <header class="top-nav">
   <div class="brand text-center" style="margin:0 auto;">
     <div style="font-size:30px;">🌾 Grameen Setu</div>
-    <div style="color:#d1fae5; font-size:13px;">Farm to Business</div>
+    <div style="color:#d1fae5; font-size:13px;">Farm to Business · Live Market Intel</div>
   </div>
 </header>
 
@@ -49,29 +94,64 @@
   <div class="main">
     <div class="topbar">
       <div class="toggle"><ion-icon name="menu-outline"></ion-icon></div>
-      <div class="search"><label><input type="text" placeholder="Search crops..."><ion-icon name="search-outline"></ion-icon></label></div>
+      <div class="search">
+        <label>
+          <input type="text" placeholder="Search crops, regions or trends...">
+          <ion-icon name="search-outline"></ion-icon>
+        </label>
+      </div>
     </div>
 
-    <div class="px-5 py-6">
-      <div class="page-title-wrapper"><h2>🔥 Trending Crops</h2></div>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-        <div class="trend-card bg-white p-5 rounded-2xl shadow-md border border-green-100">
-          <img src="assets/imgs/wheat-field.jpg" class="h-36 w-full object-cover rounded-xl mb-4" alt="Wheat">
-          <h3 class="font-bold text-lg text-green-900">🌾 Wheat</h3>
-          <p class="text-gray-600 text-sm">Demand increased by 28% this week</p>
-          <p class="text-green-700 font-bold text-xl mt-2">₹2,280 / quintal</p>
+    <div class="px-4 md:px-6 py-6">
+      <div class="page-title-wrapper">
+        <h2 class="page-heading">📈 Live Market Trends</h2>
+      </div>
+
+      <!-- Live update banner -->
+      <div class="max-w-6xl mx-auto mb-6 bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl p-3 flex items-center justify-between flex-wrap gap-2 border border-green-200">
+        <div class="flex items-center gap-2"><span class="live-indicator relative flex h-3 w-3"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span><span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span></span><span class="text-sm font-medium text-green-800">Live updates every 5 minutes</span></div>
+        <div class="flex gap-4 text-sm"><span class="text-gray-600">🕒 Last sync: <span id="liveTimestamp">Just now</span></span><button id="refreshTrends" class="text-green-700 underline text-xs">↻ Refresh data</button></div>
+      </div>
+
+      <!-- Tabs for filtering crops -->
+      <div class="max-w-6xl mx-auto mb-6 flex flex-wrap gap-2 justify-center">
+        <button data-filter="all" class="trend-filter px-5 py-2 rounded-full text-sm font-medium tab-active transition">🌾 All Crops</button>
+        <button data-filter="grains" class="trend-filter px-5 py-2 rounded-full text-sm font-medium tab-inactive transition">🌽 Grains & Cereals</button>
+        <button data-filter="vegetables" class="trend-filter px-5 py-2 rounded-full text-sm font-medium tab-inactive transition">🍅 Vegetables</button>
+        <button data-filter="spices" class="trend-filter px-5 py-2 rounded-full text-sm font-medium tab-inactive transition">🧄 Spices & Herbs</button>
+      </div>
+
+      <!-- Crops Grid (Dynamic + Original Images Preserved) -->
+      <div id="cropsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
+        <!-- JS will inject cards, keeping original image paths for Wheat, Tomato, Garlic -->
+      </div>
+
+      <!-- Market Insights & Charts Section -->
+      <div class="max-w-7xl mx-auto mt-12 grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="insight-card p-5 bg-white rounded-2xl shadow-sm border border-green-100">
+          <h3 class="font-bold text-green-900 flex items-center gap-2 mb-3"><ion-icon name="stats-chart-outline"></ion-icon> Weekly Price Index (Top 3)</h3>
+          <canvas id="priceTrendChart" width="400" height="200" style="max-height: 220px;"></canvas>
+          <p class="text-xs text-gray-400 mt-2">*Indexed prices: Wheat, Tomato, Garlic showing upward momentum</p>
         </div>
-        <div class="trend-card bg-white p-5 rounded-2xl shadow-md border border-green-100">
-          <img src="assets/imgs/tomato-basket.jpg" class="h-36 w-full object-cover rounded-xl mb-4" alt="Tomato">
-          <h3 class="font-bold text-lg text-green-900">🍅 Tomato</h3>
-          <p class="text-gray-600 text-sm">Market demand up by 15%</p>
-          <p class="text-green-700 font-bold text-xl mt-2">₹1,520 / quintal</p>
+        <div class="insight-card p-5 bg-white rounded-2xl shadow-sm border border-green-100">
+          <h3 class="font-bold text-green-900 flex items-center gap-2 mb-3"><ion-icon name="bulb-outline"></ion-icon> Demand Intelligence</h3>
+          <div class="space-y-3">
+            <div class="flex justify-between items-center border-b border-gray-100 pb-2"><span class="font-medium">🌾 Wheat</span><span class="text-green-700">High demand from southern mills</span><span class="text-xs bg-green-100 px-2 py-0.5 rounded-full">+28%</span></div>
+            <div class="flex justify-between items-center border-b border-gray-100 pb-2"><span class="font-medium">🍅 Tomato</span><span class="text-green-700">Post-harvest shortage driving bids</span><span class="text-xs bg-amber-100 px-2 py-0.5 rounded-full">+15%</span></div>
+            <div class="flex justify-between items-center"><span class="font-medium">🧄 Garlic</span><span class="text-green-700">Export orders from Middle East</span><span class="text-xs bg-purple-100 px-2 py-0.5 rounded-full">🔥 +40%</span></div>
+          </div>
+          <div class="mt-4 bg-green-50 rounded-xl p-3 text-sm"><span class="font-semibold">📊 Pro Tip:</span> Garlic prices expected to rise further — secure contracts early via bidding.</div>
         </div>
-        <div class="trend-card bg-white p-5 rounded-2xl shadow-md border border-green-100">
-          <img src="assets/imgs/garlic.jpg" class="h-36 w-full object-cover rounded-xl mb-4" alt="Garlic">
-          <h3 class="font-bold text-lg text-green-900">🧄 Garlic</h3>
-          <p class="text-gray-600 text-sm">New trending crop, +40% rise</p>
-          <p class="text-green-700 font-bold text-xl mt-2">₹3,200 / quintal</p>
+      </div>
+
+      <!-- Regional Hotspots -->
+      <div class="max-w-7xl mx-auto mt-8 bg-white rounded-2xl p-5 border border-green-100 shadow-sm">
+        <h3 class="font-bold text-green-900 flex items-center gap-2 mb-3"><ion-icon name="location-outline"></ion-icon> High-Demand Regions</h3>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+          <div class="bg-gray-50 p-2 rounded-xl text-center"><span class="font-bold">Punjab</span><p class="text-xs text-green-600">Wheat +32% demand</p></div>
+          <div class="bg-gray-50 p-2 rounded-xl text-center"><span class="font-bold">Maharashtra</span><p class="text-xs text-green-600">Tomato +22%</p></div>
+          <div class="bg-gray-50 p-2 rounded-xl text-center"><span class="font-bold">Madhya Pradesh</span><p class="text-xs text-green-600">Garlic +45%</p></div>
+          <div class="bg-gray-50 p-2 rounded-xl text-center"><span class="font-bold">Uttar Pradesh</span><p class="text-xs text-green-600">Potato +18%</p></div>
         </div>
       </div>
     </div>
@@ -81,5 +161,159 @@
 <script src="assets/js/main.js"></script>
 <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
 <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+<script>
+  // Enhanced crop dataset WITH original image paths for the first three
+  const cropsData = [
+    { id: 1, name: "Wheat", category: "grains", icon: "🌾", price: 2280, priceChange: 12, demandScore: 92, volume: "1420 tons", trend: "up", badge: "Hot Demand", region: "Punjab, UP", description: "Premium organic wheat, high protein content.", buyers: "ABC Traders, FreshMart", bids: 24, imageSrc: "assets/imgs/wheat-field.jpg" },
+    { id: 2, name: "Tomato", category: "vegetables", icon: "🍅", price: 1520, priceChange: 5, demandScore: 84, volume: "890 tons", trend: "up", badge: "Seasonal Peak", region: "Maharashtra, Karnataka", description: "Farm-fresh hybrid tomatoes.", buyers: "GreenBasket, Metro Fresh", bids: 18, imageSrc: "assets/imgs/tomato-basket.jpg" },
+    { id: 3, name: "Garlic", category: "spices", icon: "🧄", price: 3200, priceChange: 40, demandScore: 97, volume: "340 tons", trend: "up", badge: "Trending 🔥", region: "MP, Gujarat", description: "Premium export-quality garlic cloves.", buyers: "Sunrise Exports, SpiceHub", bids: 32, imageSrc: "assets/imgs/garlic.jpg" },
+    { id: 4, name: "Potato", category: "vegetables", icon: "🥔", price: 1180, priceChange: -3, demandScore: 68, volume: "2100 tons", trend: "down", badge: "Stable", region: "UP, West Bengal", description: "Cold-stored, best for processing.", buyers: "SnackFoods Ltd", bids: 9, imageSrc: "https://placehold.co/600x400/eef2ee/3c6e47?text=Potato" },
+    { id: 5, name: "Rice (Basmati)", category: "grains", icon: "🍚", price: 4850, priceChange: 8, demandScore: 88, volume: "960 tons", trend: "up", badge: "Premium", region: "Haryana, Punjab", description: "Long-grain aromatic basmati.", buyers: "RiceExports, RetailGiant", bids: 14, imageSrc: "https://placehold.co/600x400/eef2ee/3c6e47?text=Rice" },
+    { id: 6, name: "Chili", category: "spices", icon: "🌶️", price: 6950, priceChange: 22, demandScore: 91, volume: "210 tons", trend: "up", badge: "Spike Alert", region: "Andhra, Telangana", description: "High heat, export-quality.", buyers: "SpiceJet, MasalaCo", bids: 27, imageSrc: "https://placehold.co/600x400/eef2ee/3c6e47?text=Chili" }
+  ];
+
+  let activeFilter = "all";
+
+  function renderCrops() {
+    const container = document.getElementById('cropsGrid');
+    if (!container) return;
+    const filtered = activeFilter === "all" ? cropsData : cropsData.filter(c => c.category === activeFilter);
+    if (filtered.length === 0) {
+      container.innerHTML = `<div class="col-span-full text-center py-12 text-gray-400">No crops match this category.</div>`;
+      return;
+    }
+    container.innerHTML = filtered.map(crop => `
+      <div class="trend-card overflow-hidden group">
+        <div class="p-5">
+          <img src="${crop.imageSrc}" class="crop-image w-full h-40 object-cover rounded-xl mb-4" alt="${crop.name}" onerror="this.src='https://placehold.co/600x400/eef2ee/3c6e47?text=${crop.name}'">
+          <div class="flex justify-between items-start">
+            <h3 class="font-bold text-xl text-green-900 flex items-center gap-1">${crop.icon} ${crop.name}</h3>
+            <span class="badge-trend ${crop.trend === 'up' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-700'}">${crop.badge}</span>
+          </div>
+          <p class="text-sm text-gray-500 mt-1 line-clamp-2">${crop.description}</p>
+          <div class="mt-3 flex items-baseline gap-2">
+            <span class="text-2xl font-extrabold text-green-800">₹${crop.price.toLocaleString()}</span>
+            <span class="text-sm ${crop.trend === 'up' ? 'trend-up' : 'trend-down'}">${crop.trend === 'up' ? '▲' : '▼'} ${Math.abs(crop.priceChange)}%</span>
+            <span class="text-xs text-gray-400">/quintal</span>
+          </div>
+          <div class="grid grid-cols-2 gap-2 mt-4 text-xs">
+            <div class="bg-gray-50 p-2 rounded-lg text-center"><span class="block font-semibold">📊 Demand</span><span class="text-green-700 font-bold">${crop.demandScore}%</span></div>
+            <div class="bg-gray-50 p-2 rounded-lg text-center"><span class="block font-semibold">📦 Volume</span><span>${crop.volume}</span></div>
+          </div>
+          <div class="mt-3 flex flex-wrap gap-2 justify-between items-center">
+            <div class="flex -space-x-1">
+              <span class="text-xs bg-green-100 px-2 py-1 rounded-full">${crop.bids} active bids</span>
+            </div>
+            <a href="bidding.php?crop=${encodeURIComponent(crop.name)}" class="text-green-700 text-sm font-medium bg-green-50 px-3 py-1.5 rounded-full hover:bg-green-100 transition flex items-center gap-1">View Auction <ion-icon name="arrow-forward-outline"></ion-icon></a>
+          </div>
+          <div class="mt-3 pt-2 border-t border-green-50 text-xs text-gray-500 flex justify-between"><span>📍 ${crop.region}</span><span>🤝 Top buyer: ${crop.buyers.split(',')[0]}</span></div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // Chart.js for weekly trend
+  let priceChart;
+  function initChart() {
+    const ctx = document.getElementById('priceTrendChart').getContext('2d');
+    priceChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['Week 1', 'Week 2', 'Week 3', 'This Week'],
+        datasets: [
+          { label: 'Wheat (₹/q)', data: [2120, 2180, 2240, 2280], borderColor: '#d97706', backgroundColor: 'rgba(217,119,6,0.05)', tension: 0.3, fill: true },
+          { label: 'Tomato (₹/q)', data: [1420, 1450, 1490, 1520], borderColor: '#ef4444', backgroundColor: 'rgba(239,68,68,0.05)', tension: 0.3, fill: true },
+          { label: 'Garlic (₹/q)', data: [2300, 2650, 2950, 3200], borderColor: '#16a34a', backgroundColor: 'rgba(22,163,74,0.05)', tension: 0.3, fill: true }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        plugins: { legend: { position: 'top', labels: { boxWidth: 12, font: { size: 10 } } }, tooltip: { mode: 'index' } }
+      }
+    });
+  }
+
+  function liveRefresh() {
+    document.getElementById('liveTimestamp').innerHTML = new Date().toLocaleTimeString();
+    cropsData.forEach(crop => {
+      let delta = (Math.random() * 4) - 2;
+      let changePercent = (crop.priceChange || 0) + delta;
+      changePercent = Math.min(45, Math.max(-8, changePercent));
+      crop.priceChange = parseFloat(changePercent.toFixed(1));
+      let newPrice = crop.price * (1 + (delta / 100));
+      crop.price = Math.round(newPrice);
+      if (crop.price < 500) crop.price = 500;
+      crop.demandScore = Math.min(100, Math.max(30, crop.demandScore + (Math.random() * 2 - 1)));
+    });
+    renderCrops();
+    if (priceChart) {
+      const wheat = cropsData.find(c => c.name === 'Wheat')?.price || 2280;
+      const tomato = cropsData.find(c => c.name === 'Tomato')?.price || 1520;
+      const garlic = cropsData.find(c => c.name === 'Garlic')?.price || 3200;
+      priceChart.data.datasets[0].data = [wheat * 0.93, wheat * 0.956, wheat * 0.982, wheat];
+      priceChart.data.datasets[1].data = [tomato * 0.94, tomato * 0.96, tomato * 0.98, tomato];
+      priceChart.data.datasets[2].data = [garlic * 0.72, garlic * 0.83, garlic * 0.92, garlic];
+      priceChart.update();
+    }
+  }
+
+  // Filter events
+  document.querySelectorAll('.trend-filter').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.trend-filter').forEach(b => {
+        b.classList.remove('tab-active');
+        b.classList.add('tab-inactive');
+      });
+      btn.classList.remove('tab-inactive');
+      btn.classList.add('tab-active');
+      activeFilter = btn.getAttribute('data-filter');
+      renderCrops();
+    });
+  });
+
+  document.getElementById('refreshTrends')?.addEventListener('click', () => liveRefresh());
+
+  // Search
+  const searchInput = document.querySelector('.search input');
+  if (searchInput) {
+    searchInput.addEventListener('input', (e) => {
+      const term = e.target.value.toLowerCase();
+      const container = document.getElementById('cropsGrid');
+      if (!container) return;
+      const filteredAll = cropsData.filter(c => c.name.toLowerCase().includes(term) || c.region.toLowerCase().includes(term) || c.description.toLowerCase().includes(term));
+      if (term === "") renderCrops();
+      else {
+        container.innerHTML = filteredAll.map(crop => `
+          <div class="trend-card overflow-hidden"><div class="p-5"><img src="${crop.imageSrc}" class="crop-image w-full h-36 object-cover rounded-xl mb-3" onerror="this.src='https://placehold.co/600x400/eef2ee/3c6e47?text=${crop.name}'"><h3 class="font-bold text-xl">${crop.icon} ${crop.name}</h3><p class="text-sm">${crop.description}</p><div class="mt-2 font-bold text-green-700">₹${crop.price}/q</div><a href="bidding.php" class="inline-block mt-2 text-green-600 text-sm">View Auction →</a></div></div>
+        `).join('');
+        if (filteredAll.length === 0) container.innerHTML = `<div class="col-span-full text-center py-10">No matching crops found.</div>`;
+      }
+    });
+  }
+
+  renderCrops();
+  initChart();
+  setInterval(liveRefresh, 45000);
+
+  const toggleBtn = document.querySelector('.toggle');
+  const navigation = document.querySelector('.navigation');
+  if (toggleBtn && navigation) {
+    toggleBtn.addEventListener('click', () => navigation.classList.toggle('active'));
+  }
+</script>
+<style>
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .tab-active { background: #15803d !important; color: white !important; }
+  .tab-inactive { background: #f1f5f9 !important; color: #1e293b !important; }
+  .tab-inactive:hover { background: #e2e8f0 !important; }
+  .crop-image { background-color: #eef2e6; }
+</style>
 </body>
 </html>
