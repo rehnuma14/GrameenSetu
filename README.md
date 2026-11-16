@@ -141,16 +141,12 @@ composer install
 
 Developed for **CSE2221: Database Management Systems** — Department of Computer Science & Engineering, **Premier University, Chattogram**.
 
+
 | Student ID | Name | Role & Key Contributions |
-| --- | --- | --- |
-| `0222410005101125` | **Jobaida Khanam Juli** | **Project Lead** — Admin Panel, Buyer Dashboard, Trust & Ratings + Coin Wallet, Transaction History, Settings
- 
- |
-| `0222410005101123` | **Rehnuma Ahmed** | Login & Signup Flow, Email OTP Integration, Live Bidding Arena & Emergency Bids, Responsive Sidebar Navigation
- 
- |
-| `0222410005101107` | **Fahmida Sultana Rifat** | Seller Dashboard, Live Market Trends & Price Charts, Secure Messaging Hub
-|
+| :--- | :--- | :--- |
+| `0222410005101125` | **Jobaida Khanam Juli** | **Project Lead** — Admin Panel, Buyer Dashboard, Trust & Ratings + Coin Wallet, Transaction History, Settings |
+| `0222410005101123` | **Rehnuma Ahmed** | Login & Signup Flow, Email OTP Integration, Live Bidding Arena & Emergency Bids, Responsive Sidebar Navigation |
+| `0222410005101107` | **Fahmida Sultana Rifat** | Seller Dashboard, Live Market Trends & Price Charts, Secure Messaging Hub |
 
 ---
 
