@@ -149,9 +149,7 @@ Developed for **CSE2221: Database Management Systems** — Department of Compute
 | `0222410005101123` | **Rehnuma Ahmed** | Login & Signup Flow, Email OTP Integration, Live Bidding Arena & Emergency Bids, Responsive Sidebar Navigation
 
  |
-| `0222410005101107` | **Fahmida Sultana Rifat** | Seller Dashboard, Live Market Trends & Price Charts, Secure Messaging Hub
-
- |
+| `0222410005101107` | **Fahmida Sultana Rifat** | Seller Dashboard, Live Market Trends & Price Charts, Secure Messaging Hub|
 
 ---
 
